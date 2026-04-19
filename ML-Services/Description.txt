@@ -1,0 +1,5 @@
+The ML service is a dedicated microservice responsible for automated grading and feedback generation.
+It processes student submissions by extracting content, comparing it with predefined rubrics, and computing scores.
+Techniques like embeddings, similarity matching, and scoring algorithms are used for evaluation.
+The service generates structured feedback to help students understand their performance.
+It is designed as an independent, scalable component that communicates with the backend via APIs.

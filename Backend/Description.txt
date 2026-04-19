@@ -1,0 +1,5 @@
+The frontend is built using React and provides an interactive user interface for both teachers and students.
+It manages authentication, dashboards, assignment creation, and submission workflows.
+Reusable components and structured API integration ensure maintainable and scalable code.
+Axios is used for seamless communication with the backend REST APIs.
+The UI is designed for a smooth user experience with real-time updates and clear feedback display.
