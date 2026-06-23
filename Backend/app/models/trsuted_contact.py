@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.utils.database import Base
 
 
-class TrustedContacts(Base):
+class TrustedContactsModel(Base):
     __tablename__ = "trusted_contact"
 
     id = Column(Integer, primary_key=True, index=True)

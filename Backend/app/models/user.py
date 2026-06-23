@@ -11,7 +11,7 @@ class User(Base):
     phoneNo = Column(String, unique=True, index=True, nullable=False)
 
     trusted_contacts = relationship(
-        "TrustedContacts",
+        "TrustedContactsModel",
         back_populates="owner",
         cascade="all, delete"
     )

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models.trsuted_contact import TrustedContacts
+from app.models.trsuted_contact import TrustedContactsModel
 from app.schemas.trusted_contact import TrustedContactCreateSchema, TrustedContactUpdate
 
 
@@ -23,9 +23,9 @@ def validate_phone_number(phone_number: str):
 def add_contact(db: Session, user_id: int, data: TrustedContactCreateSchema):
     validate_phone_number(data.phone_number)
 
-    existing_contact = db.query(TrustedContacts).filter(
-        TrustedContacts.userId == user_id,
-        TrustedContacts.phoneNo == data.phone_number
+    existing_contact = db.query(TrustedContactsModel).filter(
+        TrustedContactsModel.userId == user_id,
+        TrustedContactsModel.phoneNo == data.phone_number
     ).first()
 
     if existing_contact:
@@ -34,7 +34,7 @@ def add_contact(db: Session, user_id: int, data: TrustedContactCreateSchema):
             detail="Contact already exists"
         )
 
-    contact = TrustedContacts(
+    contact = TrustedContactsModel(
         userId=user_id,
         name=data.name,
         phoneNo=data.phone_number,
@@ -49,8 +49,8 @@ def add_contact(db: Session, user_id: int, data: TrustedContactCreateSchema):
 
 
 def get_contacts(db: Session, user_id: int):
-    return db.query(TrustedContacts).filter(
-        TrustedContacts.userId == user_id
+    return db.query(TrustedContactsModel).filter(
+        TrustedContactsModel.userId == user_id
     ).all()
 
 
@@ -62,9 +62,9 @@ def get_contacts(db: Session, user_id: int):
 
 
 def update_contact(db: Session, user_id: int, contact_id: int, data: TrustedContactUpdate):
-    contact = db.query(TrustedContacts).filter(
-        TrustedContacts.id == contact_id,
-        TrustedContacts.userId == user_id
+    contact = db.query(TrustedContactsModel).filter(
+        TrustedContactsModel.id == contact_id,
+        TrustedContactsModel.userId == user_id
     ).first()
 
     if not contact:
@@ -82,10 +82,10 @@ def update_contact(db: Session, user_id: int, contact_id: int, data: TrustedCont
     if data.phone_number is not None:
         validate_phone_number(data.phone_number)
 
-        existing_contact = db.query(TrustedContacts).filter(
-            TrustedContacts.userId == user_id,
-            TrustedContacts.phoneNo == data.phone_number,
-            TrustedContacts.id != contact_id
+        existing_contact = db.query(TrustedContactsModel).filter(
+            TrustedContactsModel.userId == user_id,
+            TrustedContactsModel.phoneNo == data.phone_number,
+            TrustedContactsModel.id != contact_id
         ).first()
 
         if existing_contact:
@@ -106,9 +106,9 @@ def update_contact(db: Session, user_id: int, contact_id: int, data: TrustedCont
 
 
 def delete_contact(db: Session, user_id: int, contact_id: int):
-    contact = db.query(TrustedContacts).filter(
-        TrustedContacts.id == contact_id,
-        TrustedContacts.userId == user_id
+    contact = db.query(TrustedContactsModel).filter(
+        TrustedContactsModel.id == contact_id,
+        TrustedContactsModel.userId == user_id
     ).first()
 
     if not contact:
