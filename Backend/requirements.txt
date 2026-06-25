@@ -8,3 +8,8 @@ pydantic==2.7.1
 python-dotenv==1.0.1
 
 twilio
+
+pydantic-settings==2.11.0
+PyJWT==2.13.0
+pwdlib==0.2.0
+
