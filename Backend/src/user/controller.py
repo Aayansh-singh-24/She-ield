@@ -50,7 +50,7 @@ def login_user(body:LoginSchema,db:Session):
     
     if not verify_password(body.password,user.hash_password):
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="You entered wrong password")
-    exp_time=datetime.now()+timedelta(seconds=30)
+    exp_time=datetime.now()+timedelta(minutes=30)
     token=jwt.encode({"_id":user.id,"exp":exp_time.timestamp()},setting.SECRET_KEY,setting.ALGORITHM)
 
 
