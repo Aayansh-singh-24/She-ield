@@ -15,4 +15,4 @@ def alert(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return location_alert.alert(location, db, current_user.id)
+    return location_alert.alert(location, db, current_user)
