@@ -1,4 +1,4 @@
-from fastapi import HTTPException,status
+from fastapi import HTTPException,status, BackgroundTasks
 from sqlalchemy.orm import Session
 from src.location.schema.dtos import locationAlertSchema
 from src.trusted_contact.models.model import TrustedContactsModel
@@ -9,7 +9,7 @@ def send_sms(contact:TrustedContactsModel, message:str):
     pass
 
 
-def alert(location:locationAlertSchema, db:Session, user:UserModel):
+def alert(location:locationAlertSchema, backgroud_task:BackgroundTasks, db:Session, user:UserModel):
     Contacts = db.query(TrustedContactsModel).filter(
         user.id == TrustedContactsModel.userId
     ).all()
@@ -28,7 +28,7 @@ def alert(location:locationAlertSchema, db:Session, user:UserModel):
                 Emercengy Alert
                 I need Help
                 Live location : {location_link}"""
-        send_sms(contact,message)
+        backgroud_task.add_task(send_sms,contact,message)
 
     return {"link" : location_link}
 
