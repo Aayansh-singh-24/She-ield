@@ -1,4 +1,4 @@
-from fastapi import HTTPException,status
+from fastapi import HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from src.location.schema.dtos import locationAlertSchema
 from src.trusted_contact.models.model import TrustedContactsModel
