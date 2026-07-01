@@ -55,13 +55,8 @@ def alert(location:locationAlertSchema, background_task:BackgroundTasks, db:Sess
                 \n{custom_msg}\n
                 Live location : {location_link}"""
         country_code = contact.country_code or "+91"
-<<<<<<< HEAD
-        if not str(country_code.startswith("+")):
-            country_code = "+" + country_code
-=======
         if not country_code_str.startswith("+"):
             country_code_str = "+" + country_code_str
->>>>>>> 72dab105591b129ab636415bf183d5b81a88f5c4
         phone_no = f"{country_code}{contact.phoneNo}"
         
         background_task.add_task(send_sms,phone_no, message_body)
