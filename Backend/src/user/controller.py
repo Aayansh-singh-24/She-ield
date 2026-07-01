@@ -70,7 +70,7 @@ def is_authenticated(request:Request,db:Session=Depends(get_db)):
         data=jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
         # print(data)
         user_id=data.get("_id")
-        exp_time=int(data.get("exp"))
+        exp_time=int(data["exp"])
         current_time=datetime.now().timestamp()
         if current_time>exp_time:
             raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED,detail="You are unauthorized.")

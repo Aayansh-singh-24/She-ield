@@ -6,7 +6,8 @@ from src.user.models import UserModel
 from fastapi.middleware.cors import CORSMiddleware
 from src.trusted_contact.routes import contact_route
 from src.location.routes import location_route
-from src.user import router
+from src.user import user_route
+from src.audio import audio_routes
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,7 +18,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(contact_route.router)
 app.include_router(location_route.router)
-app.include_router(router.user_routes)
+app.include_router(user_route.router)
+app.include_router(audio_routes.router)
 
 app.add_middleware(
     CORSMiddleware,

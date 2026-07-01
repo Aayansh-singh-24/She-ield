@@ -6,9 +6,9 @@ from src.utils.db import Base
 class UserModel(Base):
     __tablename__="user_table"
 
-    id=Column(Integer,primary_key=True)
+    id=Column(Integer,primary_key=True,index=True)
     name=Column(String)
-    username=Column(String,nullable=False)
+    username=Column(String,nullable=False, index=True)
     hash_password=Column(String,nullable=False)
     email=Column(String)
 
@@ -19,6 +19,12 @@ class UserModel(Base):
     )
     
 
+
+    audio = relationship(
+        "AudioModel",
+        back_populates="owner",
+        cascade="all,delete"
+    )
 
 
     

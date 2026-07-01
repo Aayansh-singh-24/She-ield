@@ -24,7 +24,7 @@ def create_contact(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.add_contact(db, current_user.id, data)
+    return trusted_contact.add_contact(db, current_user, data)
 
 
 @router.get("/read_contacts", response_model=list[TrustedContactResponse],status_code=status.HTTP_200_OK)
@@ -32,7 +32,7 @@ def read_contacts(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.get_contacts(db, current_user.id)
+    return trusted_contact.get_contacts(db, current_user)
 
 
 @router.put("/edit_contact/{contact_id}", response_model=TrustedContactResponse, status_code=status.HTTP_200_OK)
@@ -42,7 +42,7 @@ def edit_contact(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.update_contact(db, current_user.id, contact_id, data)
+    return trusted_contact.update_contact(db, current_user, contact_id, data)
 
 
 @router.delete("/remove_contact/{contact_id}",status_code=status.HTTP_204_NO_CONTENT)
@@ -51,4 +51,4 @@ def remove_contact(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.delete_contact(db, current_user.id, contact_id)
+    return trusted_contact.delete_contact(db, current_user, contact_id)

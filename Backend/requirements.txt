@@ -13,6 +13,11 @@ pydantic-settings==2.11.0
 PyJWT==2.13.0
 pwdlib==0.2.0
 
+<<<<<<< HEAD
 numpy
 scipy
 SpeechR
+=======
+aiofiles
+
+>>>>>>> 72dab105591b129ab636415bf183d5b81a88f5c4
