@@ -13,8 +13,6 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SafeHer Backend")
 
-# Mount static files directory
-# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(contact_route.router)
 app.include_router(location_route.router)
