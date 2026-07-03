@@ -8,6 +8,7 @@ class Setting(BaseSettings):
     ALGORITHM: str
     EXP_TIME: int
     UPLOAD_DIR : str
+    PROFILE_DIR : str
 
 
 setting = Setting(**{})
