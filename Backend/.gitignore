@@ -9,4 +9,4 @@ __pycache__/
 safeher.db
 .env
 .vscode
-
+../venv/

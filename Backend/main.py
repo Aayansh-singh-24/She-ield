@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from src.utils.db import Base, engine
 from src.user.models import UserModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +10,6 @@ from src.audio import audio_routes
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SafeHer Backend")
-
 
 app.include_router(contact_route.router)
 app.include_router(location_route.router)
@@ -29,7 +26,7 @@ app.add_middleware(
 
 @app.get("/")
 def home():
-    return {"message" : "Welcome to homepage of safe her"}
+    return {"message": "SafeHer Backend API is running. Access API documentation at /docs"}
 
 
 
