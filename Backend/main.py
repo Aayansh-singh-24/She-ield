@@ -14,7 +14,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="SafeHer Backend")
 
 # Mount static files directory
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(contact_route.router)
 app.include_router(location_route.router)
@@ -31,7 +31,7 @@ app.add_middleware(
 
 @app.get("/")
 def home():
-    return FileResponse("static/index.html")
+    return {"message" : "Welcome to homepage of safe her"}
 
 
 

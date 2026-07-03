@@ -1,4 +1,5 @@
 from fastapi import HTTPException,status,UploadFile
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from src.user.models import UserModel
 from src.audio.model import AudioModel
@@ -33,7 +34,7 @@ async def storage(file:UploadFile) -> str:
 
 
 
-async def audio(file:UploadFile, db:Session, current_user:UserModel):
+async def upload_audio(file:UploadFile, db:Session, current_user:UserModel):
 
     ALLOWED_TYPES = [
         "audio/mpeg",
@@ -54,7 +55,47 @@ async def audio(file:UploadFile, db:Session, current_user:UserModel):
     db.commit()
     db.refresh(new_file)
 
-    return {"message" : "audio save sucessfully"}
+    return {
+        "id" : new_file.id,
+        "filename" : new_file.filename
+    }
     
 
     
+def get_audio(id:int, db:Session, current_user:UserModel):
+    audio = db.query(AudioModel).filter(
+        AudioModel.user_id == current_user.id,
+        AudioModel.id == id
+    ).first()
+
+    if not audio:
+        raise HTTPException(status_code=404, detail="audio not found...")
+    
+    if not os.path.exists(audio.filepath):
+        raise HTTPException(status_code=404,detail="Audio file missing from server")
+    
+    return FileResponse(
+        path=audio.filepath,
+        media_type="audio/mpeg",
+        filename=audio.filename,
+    )
+
+
+def delete_audio(id:int, db:Session, current_user:UserModel):
+    audio = db.query(AudioModel).filter(
+        AudioModel.user_id == current_user.id,
+        AudioModel.id == id
+    ).first()
+
+    if not audio:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="audio not found")
+    
+    # Delete file from disk...
+    if os.path.exists(audio.filepath):
+        os.remove(audio.filepath)
+
+
+    db.delete(audio)
+    db.commit()
+
+    return None
