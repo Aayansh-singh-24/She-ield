@@ -19,9 +19,14 @@ class UserModel(Base):
     )
     
 
-
     audio = relationship(
         "AudioModel",
+        back_populates="owner",
+        cascade="all,delete"
+    )
+
+    profile = relationship(
+        "ProfileModel",
         back_populates="owner",
         cascade="all,delete"
     )

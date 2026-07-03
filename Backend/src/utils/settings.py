@@ -7,7 +7,8 @@ class Setting(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     EXP_TIME: int
-    UPLOAD_DIR : str = "uploads"
+    UPLOAD_DIR : str
+    PROFILE_DIR : str
 
 
 setting = Setting(**{})
