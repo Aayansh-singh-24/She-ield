@@ -17,3 +17,10 @@ class LoginSchema(BaseModel):
     username:str
     password:str
     
+# In src/user/dtos.py
+class VerifyOTPSchema(BaseModel):
+    email: str
+    otp_code: str
+
+class ResendOTPSchema(BaseModel):
+    email: str
