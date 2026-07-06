@@ -9,6 +9,7 @@ from src.utils.settings import setting
 import os
 import uuid
 import aiofiles
+import mimetypes
 
 
 
@@ -42,6 +43,9 @@ async def upload_audio(file:UploadFile, db:Session, current_user:UserModel):
         "audio/wav",
         "audio/x-wav",
         "audio/m4a",
+        "audio/webm",
+        "audio/webm;codecs=opus",
+        "audio/ogg",
     ]
 
     if file.content_type not in ALLOWED_TYPES:
@@ -74,9 +78,11 @@ def get_audio(id:int, db:Session, current_user:UserModel):
     if not os.path.exists(audio.filepath):
         raise HTTPException(status_code=404,detail="Audio file missing from server")
     
+    mime, _ = mimetypes.guess_type(audio.filepath)
+    
     return FileResponse(
         path=audio.filepath,
-        media_type="audio/mpeg",
+        media_type=mime,
         filename=audio.filename,
     )
 

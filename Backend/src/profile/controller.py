@@ -57,8 +57,11 @@ async def upload_profile(db:Session, file:UploadFile, current_user:UserModel):
         existing_profile.filename = cast(str,file.filename)
         existing_profile.filepath = path
 
+
+
         db.commit()
         db.refresh(existing_profile)
+
 
         return {
             "id" : existing_profile.id,
@@ -72,15 +75,17 @@ async def upload_profile(db:Session, file:UploadFile, current_user:UserModel):
     db.commit()
     db.refresh(new_profile)
 
+
     return {"id" : new_profile.id, "filename" : new_profile.filename}
 
 
 
-def get_profile(id:int, db:Session, current_user:UserModel):
+def get_profile(db:Session, current_user:UserModel):
+
     profile = db.query(ProfileModel).filter(
         ProfileModel.user_id == current_user.id,
-        ProfileModel.id == id
     ).first()
+
 
     if not profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="profile not found")
@@ -113,4 +118,5 @@ def delete_profile(id:int, db:Session, current_user:UserModel):
     db.commit()
 
     return None
+
 
