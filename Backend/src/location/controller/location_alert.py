@@ -54,22 +54,15 @@ def alert(location:locationAlertSchema, background_task:BackgroundTasks, db:Sess
                 Emercengy Alert!
                 \n{custom_msg}\n
                 Live location : {location_link}"""
-<<<<<<< HEAD
-        country_code = contact.country_code or "+91"
-
-        if not str(country_code.startswith("+")):
-            country_code = "+" + country_code
-
-        phone_no = f"{country_code}{contact.phoneNo}"
-=======
         country_code_str = str(contact.country_code) or "+91"
         if not country_code_str.startswith("+"):
             country_code_str = "+" + country_code_str
         phone_no = f"{country_code_str}{contact.phoneNo}"
         
         background_task.add_task(send_sms,phone_no, message_body)
->>>>>>> dhruv
 
-        background_task.add_task(send_sms, phone_no, message_body)
+        # send_sms(phone_no, message_body)
+
+        # send_sms(contact,message)
 
     return {"link" : location_link}
