@@ -8,6 +8,7 @@ class Setting(BaseSettings):
     ALGORITHM: str
     EXP_TIME: int
     UPLOAD_DIR : str = "uploads"
+    PROFILE_DIR : str
     # otp ke liye
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587

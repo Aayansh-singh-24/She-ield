@@ -14,7 +14,7 @@ router=APIRouter(prefix="/user", tags=["user"])
 
 @router.post("/register", response_model=UserResponseSchema,status_code=HTTPStatus.CREATED) # type: ignore
 def register(body:UserSchema,background_tasks:BackgroundTasks, db:Session=Depends(get_db)):
-    return controller.register(body, db,background_tasks)
+    return controller.register(body, db, background_tasks)
 
 @router.post("/verify-otp",status_code=HTTPStatus.OK)
 def verif_otp(body:VerifyOTPSchema,db:Session=Depends(get_db)):

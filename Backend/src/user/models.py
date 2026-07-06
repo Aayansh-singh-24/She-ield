@@ -26,6 +26,12 @@ class UserModel(Base):
         cascade="all,delete"
     )
 
+    profile = relationship(
+        "ProfileModel",
+        back_populates="owner",
+        cascade="all,delete"
+    )
+
 class OTPVerificationModel(Base):
     __tablename__ = "otp_verification"
     id = Column(Integer, primary_key=True, index=True)
