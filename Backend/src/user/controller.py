@@ -20,7 +20,7 @@ def get_password_hash(password):
 def verify_password(plain_password,hashed_password):
     return password_hash.verify(plain_password,hashed_password)
 
-def register(body:UserSchema,db:Session):
+def register(body:UserSchema,db:Session,background_tasks:BackgroundTasks):
     is_user=db.query(UserModel).filter(UserModel.username==body.username).first()
     if is_user:
         raise HTTPException(400,detail="Username already exists...")
@@ -56,7 +56,7 @@ def register(body:UserSchema,db:Session):
     db.commit()
 
     # Send OTP in background
-    BackgroundTasks.add_task(send_otp_email, body.email, otp)
+    background_tasks.add_task(send_otp_email, body.email, otp)
 
     return new_user
 
