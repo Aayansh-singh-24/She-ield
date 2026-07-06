@@ -54,7 +54,6 @@ def login_user(body:LoginSchema,db:Session):
     token=jwt.encode({"_id":user.id,"exp":exp_time.timestamp()},setting.SECRET_KEY,setting.ALGORITHM)
 
 
-
     return {
         "token":token
     }
