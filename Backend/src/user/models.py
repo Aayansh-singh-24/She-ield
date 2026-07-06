@@ -32,5 +32,3 @@ class OTPVerificationModel(Base):
     email = Column(String, index=True, nullable=False)
     otp_code = Column(String, nullable=False)
     expires_at = Column(DateTime, nullable=False)
-
-    
