@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from src.user.models import UserModel
 from src.profile.model import ProfileModel
 from src.utils.settings import setting
-
+from src.profile.dtos import UpdateUserSchema
 
 import os,uuid,mimetypes
 import aiofiles
@@ -120,3 +120,31 @@ def delete_profile(id:int, db:Session, current_user:UserModel):
     return None
 
 
+def update_user_credentials(body:UpdateUserSchema, db:Session, current_user:UserModel):
+
+    data = body.model_dump(exclude_unset=True) # the data which are not present in body will not assigned None automatically
+
+    if "email" in data:
+        existing_email_user = db.query(UserModel).filter(
+            UserModel.email == data["email"]
+        ).first()
+
+        if existing_email_user and existing_email_user.id != current_user.id:
+           raise HTTPException(400, "Email  already exists")
+        
+        current_user.email = data["email"]
+
+    if "username" in data:
+        existing_username_user = db.query(UserModel).filter(
+            UserModel.username == data["username"]
+        ).first()
+
+        if existing_username_user and existing_username_user.id != current_user.id:
+            raise HTTPException(400, "Phone number already exists")
+        
+        current_user.username = data["username"]
+
+    db.commit()
+    db.refresh(current_user)
+
+    return current_user
