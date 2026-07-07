@@ -3,7 +3,7 @@ from http import HTTPStatus
 from src.user.dtos import UserSchema,LoginSchema
 from sqlalchemy.orm import Session
 from fastapi import HTTPException,Request,Depends,BackgroundTasks
-from src.user.models import UserModel,OTPVerificationModel
+from src.user.models import UserModel, OTPVerificationModel
 from src.utils.db import get_db
 from pwdlib import PasswordHash
 import jwt
@@ -20,7 +20,7 @@ def get_password_hash(password):
 def verify_password(plain_password,hashed_password):
     return password_hash.verify(plain_password,hashed_password)
 
-def register(body:UserSchema, db:Session, background_tasks:BackgroundTasks):
+def register(body:UserSchema,db:Session,background_tasks:BackgroundTasks):
     is_user=db.query(UserModel).filter(UserModel.username==body.username).first()
     if is_user:
         raise HTTPException(400,detail="Username already exists...")
