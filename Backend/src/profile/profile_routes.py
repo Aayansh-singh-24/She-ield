@@ -6,7 +6,7 @@ from src.utils.db import get_db
 from src.user.controller import is_authenticated
 from src.user.models import UserModel
 from src.profile.dtos import UpdateUserSchema, UpdateUserResponseSchema
-from src.profile.controller import service
+from src.profile import controller as service
 
 router = APIRouter(prefix="/profile", tags=["Profile"])
 
