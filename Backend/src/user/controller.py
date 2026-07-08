@@ -3,7 +3,7 @@ from http import HTTPStatus
 from src.user.dtos import UserSchema,LoginSchema
 from sqlalchemy.orm import Session
 from fastapi import HTTPException,Request,Depends,BackgroundTasks
-from src.user.models import UserModel,OTPVerificationModel
+from src.user.models import UserModel, OTPVerificationModel
 from src.utils.db import get_db
 from pwdlib import PasswordHash
 import jwt
@@ -76,7 +76,6 @@ def login_user(body:LoginSchema,db:Session):
 
     exp_time=datetime.now()+timedelta(minutes=30)
     token=jwt.encode({"_id":user.id,"exp":exp_time.timestamp()},setting.SECRET_KEY,setting.ALGORITHM)
-
 
 
     return {

@@ -37,4 +37,8 @@ def delete_audio(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
+<<<<<<< HEAD
     return controller.delete_audio(id, db, current_user)
+=======
+    return controller.delete_audio(id, db, current_user)
+>>>>>>> 94d2268f512edd5fb1d3e72aceef3de46cbaaae8

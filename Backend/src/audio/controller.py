@@ -8,6 +8,7 @@ from src.utils.settings import setting
 import os
 import uuid
 import aiofiles
+import mimetypes
 
 async def storage(file: UploadFile) -> str:
     UPLOAD_DIR = setting.UPLOAD_DIR

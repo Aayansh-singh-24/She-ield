@@ -7,8 +7,17 @@ from src.location.routes import location_route
 from src.user import user_route
 from src.audio import audio_routes
 from src.profile import profile_routes
+<<<<<<< HEAD
+=======
+from src.utils.settings import setting
+
+>>>>>>> 94d2268f512edd5fb1d3e72aceef3de46cbaaae8
 
 Base.metadata.create_all(bind=engine)
+
+from sqlalchemy import inspect
+
+
 
 app = FastAPI(title="SafeHer Backend")
 

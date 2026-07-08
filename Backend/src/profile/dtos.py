@@ -3,8 +3,8 @@ from typing import Optional
 
 
 class UpdateUserSchema(BaseModel):
-    username: Optional[str]
-    email: Optional[str]
+    username: Optional[str] = None
+    email: Optional[str] = None
 
 
 class UpdateUserResponseSchema(BaseModel):

@@ -20,9 +20,14 @@ class UserModel(Base):
     )
     
 
-
     audio = relationship(
         "AudioModel",
+        back_populates="owner",
+        cascade="all,delete"
+    )
+
+    profile = relationship(
+        "ProfileModel",
         back_populates="owner",
         cascade="all,delete"
     )
@@ -33,5 +38,3 @@ class OTPVerificationModel(Base):
     email = Column(String, index=True, nullable=False)
     otp_code = Column(String, nullable=False)
     expires_at = Column(DateTime, nullable=False)
-
-    
