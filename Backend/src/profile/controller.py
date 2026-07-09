@@ -5,6 +5,8 @@ from src.user.models import UserModel
 from src.profile.models import ProfileModel
 from src.utils.settings import setting
 from src.profile.dtos import UpdateUserSchema
+from src.profile.dtos import UpdatePassword
+from src.user.controller import get_password_hash, verify_password
 
 import os,uuid,mimetypes
 import aiofiles
@@ -148,3 +150,31 @@ def update_user_credentials(body:UpdateUserSchema, db:Session, current_user:User
     db.refresh(current_user)
 
     return current_user
+
+
+def update_password(body:UpdatePassword, db:Session, current_user:UserModel):
+
+    data = body.model_dump()
+
+
+    if not verify_password(data["current_password"], current_user.hash_password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Current Password is incorrect")
+    
+    if verify_password(data["new_password"], current_user.hash_password):
+        raise HTTPException( status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the current password.")
+    
+
+    if data["new_password"] != data["confirm_password"]:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="password not matched")
+    
+    try:
+        current_user.hash_password = get_password_hash(data["new_password"])
+
+        db.commit()
+        db.refresh(current_user)
+    except Exception:
+        db.rollback()
+        raise
+
+    return None
+

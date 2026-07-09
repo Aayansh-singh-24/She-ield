@@ -12,3 +12,8 @@ class UpdateUserResponseSchema(BaseModel):
     name: str
     username: str
     email: str
+
+class UpdatePassword(BaseModel):
+    current_password : str
+    new_password : str
+    confirm_password : str
