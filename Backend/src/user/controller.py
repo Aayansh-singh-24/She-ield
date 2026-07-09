@@ -74,7 +74,7 @@ def login_user(body:LoginSchema,db:Session):
             detail="Your email is not verified. Please verify using OTP."
         )
 
-    exp_time=datetime.now()+timedelta(minutes=30)
+    exp_time=datetime.now()+timedelta(minutes=setting.EXP_TIME)
     token=jwt.encode({"_id":user.id,"exp":exp_time.timestamp()},setting.SECRET_KEY,setting.ALGORITHM)
 
 
