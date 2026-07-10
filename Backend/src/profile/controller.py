@@ -33,13 +33,7 @@ async def storage(file:UploadFile):
 
 async def upload_profile(db:Session, file:UploadFile, current_user:UserModel):
         
-    ALLOWED_IMAGE_TYPES = [
-        "image/jpeg",   
-        "image/png",    
-        "image/webp",   
-    ]
-
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
+    if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="image type is not valid..")
     
     path = await storage(file)
