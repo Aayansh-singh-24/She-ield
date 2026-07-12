@@ -1,7 +1,10 @@
 venv/
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
 .env
+.env.*
 Recording/
 Profile/
+Backend/uploads/
