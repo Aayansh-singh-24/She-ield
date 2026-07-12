@@ -38,3 +38,6 @@ class OTPVerificationModel(Base):
     email = Column(String, index=True, nullable=False)
     otp_code = Column(String, nullable=False)
     expires_at = Column(DateTime, nullable=False)
+    name = Column(String, nullable=True)
+    username = Column(String, nullable=True)
+    hash_password = Column(String, nullable=True)

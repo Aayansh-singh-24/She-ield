@@ -5,6 +5,8 @@ from src.user.models import UserModel
 from src.profile.models import ProfileModel
 from src.utils.settings import setting
 from src.profile.dtos import UpdateUserSchema
+from src.profile.dtos import UpdatePassword
+from src.user.controller import get_password_hash, verify_password
 
 import os,uuid,mimetypes
 import aiofiles
@@ -31,13 +33,7 @@ async def storage(file:UploadFile):
 
 async def upload_profile(db:Session, file:UploadFile, current_user:UserModel):
         
-    ALLOWED_IMAGE_TYPES = [
-        "image/jpeg",   
-        "image/png",    
-        "image/webp",   
-    ]
-
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
+    if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="image type is not valid..")
     
     path = await storage(file)
@@ -148,3 +144,31 @@ def update_user_credentials(body:UpdateUserSchema, db:Session, current_user:User
     db.refresh(current_user)
 
     return current_user
+
+
+def update_password(body:UpdatePassword, db:Session, current_user:UserModel):
+
+    data = body.model_dump()
+
+
+    if not verify_password(data["current_password"], current_user.hash_password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Current Password is incorrect")
+    
+    if verify_password(data["new_password"], current_user.hash_password):
+        raise HTTPException( status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the current password.")
+    
+
+    if data["new_password"] != data["confirm_password"]:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="password not matched")
+    
+    try:
+        current_user.hash_password = get_password_hash(data["new_password"])
+
+        db.commit()
+        db.refresh(current_user)
+    except Exception:
+        db.rollback()
+        raise
+
+    return None
+
