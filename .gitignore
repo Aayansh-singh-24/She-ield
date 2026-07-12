@@ -1,10 +1,18 @@
+
 venv/
 .venv/
 __pycache__/
+
 *.py[cod]
 *.pyo
+*.pyd
+
 .env
 .env.*
+
+.vscode/
+
+# User Generated Files
 Recording/
 Profile/
 Backend/uploads/
