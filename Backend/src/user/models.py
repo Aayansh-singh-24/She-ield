@@ -32,6 +32,12 @@ class UserModel(Base):
         cascade="all,delete"
     )
 
+    emergency = relationship(
+        "EmergencySession",
+        back_populates="owner",
+        cascade="all,delete"
+    )
+
 class OTPVerificationModel(Base):
     __tablename__ = "otp_verification"
     id = Column(Integer, primary_key=True, index=True)
