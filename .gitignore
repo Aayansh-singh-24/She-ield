@@ -14,5 +14,10 @@ __pycache__/
 
 # User Generated Files
 Recording/
-Profile/
+Images/
 Backend/uploads/
+
+#databases:
+*.db
+*.sqlite
+*.sqlite3
