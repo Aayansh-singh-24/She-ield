@@ -9,6 +9,12 @@ class Setting(BaseSettings):
     EXP_TIME: int
     UPLOAD_DIR : str = "uploads"
     PROFILE_DIR : str
+
+    # twillio credentials
+    TWILIO_ACCOUNT_SID : str
+    TWILIO_AUTH_TOKEN : str
+    TWILIO_PHONE_NUMBER : str
+
     # otp ke liye
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
