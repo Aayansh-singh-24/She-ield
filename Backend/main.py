@@ -8,6 +8,7 @@ from src.user import user_route
 from src.audio import audio_routes
 from src.profile import profile_routes
 from src.utils.settings import setting
+from src.Emergency.model import EmergencySession, LocationHistory
 
 Base.metadata.create_all(bind=engine)
 

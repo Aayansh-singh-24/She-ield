@@ -32,7 +32,7 @@ class UserModel(Base):
         cascade="all,delete"
     )
 
-    emergency = relationship(
+    emergency_session = relationship(
         "EmergencySession",
         back_populates="owner",
         cascade="all,delete"
