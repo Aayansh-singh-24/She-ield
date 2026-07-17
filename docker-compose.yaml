@@ -1,0 +1,27 @@
+version: "3.12.8"
+services:
+  backend:
+    build:
+      context: ./Backend
+    container_name: she-ield-backend
+    image: backend:latest
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./Backend/.env
+    depends_on:
+      - ml-service
+    
+  ml-service:
+    build:
+      context: ./ML-Services
+    container_name: sheield-ml
+    image: ml-services:latest
+    ports:
+      - "8001:8001"
+   
+  
+     
+
+
+   
