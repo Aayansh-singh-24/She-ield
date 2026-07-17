@@ -21,7 +21,7 @@ app.include_router(user_route.router)
 app.include_router(audio_routes.router)
 app.include_router(profile_routes.router)
 
-import httpx
+import http
 from fastapi import UploadFile, File, HTTPException
 
 app.add_middleware(
@@ -34,7 +34,7 @@ app.add_middleware(
 
 @app.post("/detect-distress")
 async def detect_distress(file: UploadFile = File(...)):
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with http.AsyncClient(timeout=30.0) as client:
         try:
             content = await file.read()
             files = {'file': (file.filename, content, file.content_type)}
@@ -42,7 +42,7 @@ async def detect_distress(file: UploadFile = File(...)):
             if response.status_code != 200:
                 raise HTTPException(status_code=response.status_code, detail=response.text)
             return response.json()
-        except httpx.RequestError as exc:
+        except http.RequestError as exc:
             raise HTTPException(status_code=503, detail=f"ML Service is offline: {exc}")
 
 @app.get("/")
