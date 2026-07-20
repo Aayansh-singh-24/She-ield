@@ -3,6 +3,7 @@ from http import HTTPStatus
 from src.user.dtos import UserSchema,LoginSchema
 from sqlalchemy.orm import Session
 from fastapi import HTTPException,Request,Depends,BackgroundTasks
+from fastapi import WebSocket
 from src.user.models import UserModel, OTPVerificationModel
 from src.utils.db import get_db
 from pwdlib import PasswordHash
@@ -68,6 +69,7 @@ def register(body:UserSchema,db:Session,background_tasks:BackgroundTasks):
         "email": body.email
     }
 
+
 def login_user(body:LoginSchema,db:Session):
     user=db.query(UserModel).filter(UserModel.username==body.username).first()
     if not user:
@@ -119,6 +121,30 @@ def is_authenticated(request:Request,db:Session=Depends(get_db)):
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid token")
     
 
+
+async def websocket_authenticate(websocket:WebSocket, db:Session):
+    token = websocket.headers.get("authorization")
+    if not token:
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Authorization header missing")
+    token=token.split(" ")[-1]
+    try:
+        data=jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)
+        # print(data)
+        user_id=data.get("_id")
+        exp_time=int(data["exp"])
+        current_time=datetime.now().timestamp()
+        if current_time>exp_time:
+            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED,detail="You are unauthorized.")
+
+
+        user=db.query(UserModel).filter(UserModel.id==user_id).first()
+        if not user:
+            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED,detail="You are unauthorized.")
+
+        
+        return user
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid token")
 
     ## otp ke liye
 

@@ -7,7 +7,8 @@ from src.utils.settings import setting
 from twilio.rest import Client
 from src.user.models import UserModel
 from src.trusted_contact.models.model import TrustedContactsModel
-from src.Emergency.model import EmergencySession
+from src.Emergency.model import EmergencySession, LocationHistory
+from src.Emergency.schema import LiveLocationSchema
 
 logger = logging.getLogger(__name__)
 
@@ -101,5 +102,87 @@ class EmergencyService:
     # public function 
     def create_new_session(self, current_user):
         self.close_session(current_user)
-        session = self.create_session(current_user)
+        session = self._create_session_(current_user)
+        return session
+    
+
+    def get_session(self, session_id:str):
+        session = self.db.query(EmergencySession).filter(
+            EmergencySession.session_id == session_id
+        ).first()
+
+        if not session:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="session not found")
+        
+        return session
+    
+    def validate_active_session(self, session_id:str):
+        
+        session = self.get_session(session_id)
+
+        if session.status != "ACTIVE":
+
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Emergency session is no longer active.",)
+
+        return session
+    
+    def validate_user_owner(self, session_id:str, current_user:UserModel):
+        
+        session = self.validate_active_session(session_id)
+
+        if current_user.id != session.user_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,  detail="You are not allowed to update this emergency.")
+        
+        return session
+    
+    ##############################
+    # location
+    #############################
+
+    def save_location(self, session_id:str, body:LiveLocationSchema, current_user:UserModel):
+        session = self.validate_user_owner(session_id, current_user)
+
+        location = LocationHistory(
+            session_id = session_id,
+            latitude = body.latitude,
+            longitude = body.longitude,
+            speed = body.speed,
+            accuracy = body.accuracy,
+            timestamp = datetime.now(UTC)
+        )
+
+        try:
+            self.db.add(location)
+            self.db.commit()
+            self.db.refresh(location)
+            logger.info("Location stored for session %s", session.session_id)
+        except Exception:
+            self.db.rollback()
+            raise
+
+        
+        return location
+
+    def get_latest_location(self, session_id:str):
+
+        session = self.validate_active_session(session_id)
+
+        latest_location = self.db.query(LocationHistory).filter( 
+            LocationHistory.session_id == session_id
+            ).order_by(
+                LocationHistory.timestamp.desc()
+                ).first
+        
+        return latest_location
+
+    def end_session(self, session_id:str, current_user:UserModel):
+
+        session = self.validate_user_owner(session_id,current_user)
+        session.status = "ENDED"
+        session.ended_time = datetime.now(UTC)
+
+        self.db.commit()
+
+        logger.info("Emergency session %s ended.",session.session_id)
+
         return session

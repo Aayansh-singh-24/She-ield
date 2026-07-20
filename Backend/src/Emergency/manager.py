@@ -14,19 +14,20 @@ class SessionConnection:
 
 class ConnectionManager:
     def __init__(self):
-        self.active_session : Dict[str, SessionConnection] = {} # Store current runnig session
+        self.active_session : Dict[str, SessionConnection] = {} # Store current runnig session in a form of dict {session_id : websocketConnection}
     
 
     # Helper functions
 
-
-    def _get_session_(self, session_id: str) -> SessionConnection:
+    # to fetch active_session from dictionary
+    def _get_session_(self, session_id: str):
 
         if session_id not in self.active_sessions:
             self.active_sessions[session_id] = SessionConnection()
 
         return self.active_sessions[session_id]
     
+    # delete teh non-usable seesion info from active session dictionary
     def _cleanup_(self, session_id:str):
         
         if session_id not in self.active_session:
@@ -45,6 +46,7 @@ class ConnectionManager:
         session = self._get_session_(session_id)
         session.mobile = websocket
         logger.info("Mobile connected for session %s",session_id)
+
 
     async def disconnect_mobile(self, session_id:str):
         if session_id not in self.active_session:
@@ -95,3 +97,7 @@ class ConnectionManager:
         logger.info("Broadcasted location to %d guardian(s) ""for session %s",len(session.guardians),session_id)
 
         self._cleanup_(session_id)
+
+
+#object
+manager = ConnectionManager()
