@@ -1,68 +1,41 @@
 from fastapi import HTTPException,status,BackgroundTasks
 from sqlalchemy.orm import Session
+
 from src.location.schema.dtos import locationAlertSchema
-from src.trusted_contact.models.model import TrustedContactsModel
+
 from src.user.models import UserModel
-import twilio
-# Twillio setup
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
-AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-PHONE = os.getenv("TWILIO_PHONE_NUMBER")
-from twilio.rest import Client
+from src.emergency.dependencies.service import EmergencyService
 
 
-client = Client(ACCOUNT_SID, AUTH_TOKEN)
+def send_sms(service:EmergencyService, phone_no:str,message:str):
+    service.client.messages.create(
+        body=message,
+        from_=service.phoneNo,
+        to=phone_no,\
+    )
+
+def alert(location:locationAlertSchema, background_tak:BackgroundTasks, db:Session, current_user:UserModel):
 
 
-# print(message.sid)
-# def send_sms(phoneNo:TrustedContactsModel, message:str):
-def send_sms(phone_no:str,message_body:str):
-    try:
-     message = client.messages.create(
-     body=message_body,
-     from_=PHONE,
-     to=phone_no
-     )
-     print(f"SMS successfully sent to {phone_no}")
-    except Exception as e:
-        print(f"Failed to send SMS to {phone_no}: {str(e)}")
+    service = EmergencyService(db)
 
+    # create new emergency session
+    session = service.create_new_session(current_user)
 
-def alert(location:locationAlertSchema, background_task:BackgroundTasks, db:Session, current_user:UserModel):
+    # tracking url
+    tracking_url = service.create_new_session(current_user)
 
-    Contacts = db.query(TrustedContactsModel).filter(
-        current_user.id == TrustedContactsModel.userId
-    ).all()
+    contacts = service._get_contact_(current_user)
 
-    if not Contacts:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="contact not found")
-    
+    message = service._tracking_message_(current_user,tracking_url, location.message)
 
-    latitude = location.latitude
-    longitude  = location.longitude
-    custom_msg = location.message or "I need Help!!"
+    for contact in contacts:
+        phone_no = service._format_phone_number_(contact)
 
-    location_link = (f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}")
+        background_tak(send_sms, service, phone_no, message)
 
-    for contact in Contacts:
-        message_body = f"""
-                Emercengy Alert!
-                \n{custom_msg}\n
-                Live location : {location_link}"""
-        country_code_str = str(contact.country_code) or "+91"
-        if not country_code_str.startswith("+"):
-            country_code_str = "+" + country_code_str
-        phone_no = f"{country_code_str}{contact.phoneNo}"
-        
-        background_task.add_task(send_sms,phone_no, message_body)
-
-        # send_sms(phone_no, message_body)
-
-        # send_sms(contact,message)
-
-    return {"link" : location_link}
+    return {
+        "message": "Emergency session started successfully.",
+        "session_id": session.session_id,
+        "tracking_url": tracking_url,
+    }

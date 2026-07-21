@@ -7,8 +7,8 @@ from src.utils.settings import setting
 from twilio.rest import Client
 from src.user.models import UserModel
 from src.trusted_contact.models.model import TrustedContactsModel
-from src.Emergency.model import EmergencySession, LocationHistory
-from src.Emergency.schema import LiveLocationSchema
+from src.emergency.model import EmergencySession, LocationHistory
+from src.emergency.schema import LiveLocationSchema
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class EmergencyService:
     
     def _close_session_(self, current_user):
 
-        active_session = self.get_active_session(current_user)
+        active_session = self._get_active_session_(current_user)
 
         if not active_session:
             return
@@ -86,7 +86,7 @@ class EmergencyService:
     # Create a new Session. 
 
     def _create_session_(self, current_user:UserModel):
-        session = EmergencyService(
+        session = EmergencySession(
             user_id = current_user.id,
             status = "ACTIVE"
         )
@@ -99,9 +99,10 @@ class EmergencyService:
 
         return session
     
+
     # public function 
     def create_new_session(self, current_user):
-        self.close_session(current_user)
+        self._close_session_(current_user)
         session = self._create_session_(current_user)
         return session
     
@@ -171,7 +172,7 @@ class EmergencyService:
             LocationHistory.session_id == session_id
             ).order_by(
                 LocationHistory.timestamp.desc()
-                ).first
+                ).first()
         
         return latest_location
 

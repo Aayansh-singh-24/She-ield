@@ -8,7 +8,8 @@ from src.user import user_route
 from src.audio import audio_routes
 from src.profile import profile_routes
 from src.utils.settings import setting
-from src.Emergency.model import EmergencySession, LocationHistory
+from src.emergency.model import EmergencySession, LocationHistory
+from src.emergency import websocket
 
 Base.metadata.create_all(bind=engine)
 
@@ -21,6 +22,8 @@ app.include_router(location_route.router)
 app.include_router(user_route.router)
 app.include_router(audio_routes.router)
 app.include_router(profile_routes.router)
+app.include_router(websocket.router)
+
 
 import httpx
 from fastapi import UploadFile, File, HTTPException
