@@ -8,7 +8,7 @@ class EmergencySession(Base):
     __tablename__ = "emergency_session"
 
     id = Column(Integer, primary_key=True)
-    session_id = Column(String, unique=True, nullable=False, default=str(uuid4()))
+    session_id = Column(String, unique=True, nullable=False, default=lambda : str(uuid4()))
     status = Column(String, default="Active")
     started_time = Column(DateTime(timezone=True), server_default=func.now())
     ended_time = Column(DateTime(timezone=True), nullable=True)

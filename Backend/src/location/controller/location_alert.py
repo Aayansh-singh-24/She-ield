@@ -11,7 +11,7 @@ def send_sms(service:EmergencyService, phone_no:str,message:str):
     service.client.messages.create(
         body=message,
         from_=service.phoneNo,
-        to=phone_no,\
+        to=phone_no
     )
 
 def alert(location:locationAlertSchema, background_tak:BackgroundTasks, db:Session, current_user:UserModel):
@@ -23,7 +23,7 @@ def alert(location:locationAlertSchema, background_tak:BackgroundTasks, db:Sessi
     session = service.create_new_session(current_user)
 
     # tracking url
-    tracking_url = service.create_new_session(current_user)
+    tracking_url = service._build_tracking_url_(session.session_id)
 
     contacts = service._get_contact_(current_user)
 
@@ -32,7 +32,7 @@ def alert(location:locationAlertSchema, background_tak:BackgroundTasks, db:Sessi
     for contact in contacts:
         phone_no = service._format_phone_number_(contact)
 
-        background_tak(send_sms, service, phone_no, message)
+        background_tak.add_task(send_sms, service, phone_no, message)
 
     return {
         "message": "Emergency session started successfully.",

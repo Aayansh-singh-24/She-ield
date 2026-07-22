@@ -9,7 +9,7 @@ from src.utils.db import SessionLocal
 from src.user.controller import websocket_authenticate
 
 
-async def live_location(websocket:WebSocket, session_id:str, current_user:UserModel):
+async def live_location(websocket:WebSocket, session_id:str):
     
     db = SessionLocal()
     current_user = await websocket_authenticate(websocket, db)
@@ -52,7 +52,7 @@ async def live_location(websocket:WebSocket, session_id:str, current_user:UserMo
         await websocket.close(code=1011,reason=str(e))
 
 
-async def track(websocket:WebSocket, session_id:str, db:Session):
+async def track(websocket:WebSocket, session_id:str):
 
     db = SessionLocal()
     
@@ -65,10 +65,7 @@ async def track(websocket:WebSocket, session_id:str, db:Session):
         service.validate_active_session(session_id)
 
         # Accept guardian connection
-        await manager.connect_guardian(
-            session_id=session_id,
-            websocket=websocket,
-        )
+        await manager.connect_guardian(session_id,websocket)
 
         # Send last known location immediately
         latest = service.get_latest_location(session_id)

@@ -14,5 +14,5 @@ async def live_location(websocket:WebSocket, session_id:str):
     await controller.live_location(websocket, session_id)
 
 @router.websocket("/track/{session_id}")
-async def track(websocket:WebSocket, session_id:str, ):
+async def track(websocket:WebSocket, session_id:str ):
     await controller.track(websocket, session_id)
