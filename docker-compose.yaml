@@ -23,13 +23,7 @@ services:
 
     ports:
       - "8001:8001"
-
-<<<<<<< HEAD
-
-
-
-
-=======
+      
   postgres:
     image: postgres:17.6
     container_name: sheield-postgres
@@ -46,7 +40,6 @@ services:
   
 volumes:
   postgres_data:
->>>>>>> 9dab0c59cd7dd49b99d5a0ab54c7ada9f7e70cb8
    
   
      
