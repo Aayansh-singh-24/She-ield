@@ -19,6 +19,11 @@ services:
     image: ml-services:latest
     ports:
       - "8001:8001"
+
+
+
+
+
    
   
      
