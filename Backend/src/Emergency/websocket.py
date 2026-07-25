@@ -1,8 +1,4 @@
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, status
-from sqlalchemy.orm import Session
-from src.utils.db import get_db
-from src.user.controller import websocket_authenticate
-from src.user.models import UserModel
+from fastapi import APIRouter,  WebSocket
 from src.emergency import controller
 
 

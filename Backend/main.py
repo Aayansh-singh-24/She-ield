@@ -1,15 +1,23 @@
-from fastapi import FastAPI
+import httpx
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from src.utils.db import Base, engine
 from src.user.models import UserModel
 from fastapi.middleware.cors import CORSMiddleware
+
+
 from src.trusted_contact.routes import contact_route
 from src.location.routes import location_route
 from src.user import user_route
 from src.audio import audio_routes
 from src.profile import profile_routes
 from src.utils.settings import setting
+
+
 from src.emergency.model import EmergencySession, LocationHistory
-from src.emergency import websocket
+from src.emergency import websocket, tracking_router
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,10 +31,9 @@ app.include_router(user_route.router)
 app.include_router(audio_routes.router)
 app.include_router(profile_routes.router)
 app.include_router(websocket.router)
+app.include_router(tracking_router.router)
 
 
-import httpx
-from fastapi import UploadFile, File, HTTPException
 
 app.add_middleware(
     CORSMiddleware,
@@ -35,6 +42,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount(
+    "/static",
+    StaticFiles(directory="static"),
+    name="static"
+)
+
+templates = Jinja2Templates(directory="templates")
 
 @app.post("/detect-distress")
 async def detect_distress(file: UploadFile = File(...)):

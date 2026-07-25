@@ -23,8 +23,8 @@ class LocationHistory(Base):
     __tablename__ = "location_history"
     id = Column(Integer, primary_key=True)
     session_id = Column(String, ForeignKey("emergency_session.session_id", ondelete="CASCADE"))
-    latitude = Column(String, nullable=False)
-    longitude = Column(String, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
     speed = Column(Float,nullable=False)
     accuracy = Column(Float, nullable=False)
     timestamp = Column(DateTime(timezone=True),nullable=False, server_default=func.now())

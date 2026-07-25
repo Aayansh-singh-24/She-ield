@@ -26,6 +26,7 @@ class ConnectionManager:
             self.active_session[session_id] = SessionConnection()
 
         return self.active_session[session_id]
+
     
     # delete teh non-usable seesion info from active session dictionary
     def _cleanup_(self, session_id:str):
@@ -92,8 +93,8 @@ class ConnectionManager:
             except Exception:
                 disconnected.append(guardian)
         
-        for guardian in disconnected:
-            session.guardian.discard(guardian)
+        for g in disconnected:
+            session.guardian.discard(g)
 
         logger.info("Broadcasted location to %d guardian(s) ""for session %s",len(session.guardian),session_id)
 
