@@ -24,7 +24,7 @@ async def live_location(websocket:WebSocket, session_id:str):
 
         while True:
 
-            data = await websocket.receive_json()
+            data = await websocket.receive_json() # store data send by user location 
 
             payload = LiveLocationSchema(**data)
 
