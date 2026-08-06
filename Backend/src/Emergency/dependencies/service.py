@@ -17,7 +17,7 @@ class EmergencyService:
         self.db = db
         self.client = Client(setting.TWILIO_ACCOUNT_SID, setting.TWILIO_AUTH_TOKEN)
         self.phoneNo = setting.TWILIO_PHONE_NUMBER
-        self.base_tracking_url = getattr(setting, "TRACKING_URL",  "http://localhost:8000/track")
+        self.base_tracking_url = getattr(setting, "TRACKING_URL",  "https://sheield.netlify.app")
 
 
     def _get_contact_(self,current_user:UserModel):
@@ -30,7 +30,7 @@ class EmergencyService:
     
 
     def _build_tracking_url_(self, session_id:str):
-        return f"{self.base_tracking_url}/{session_id}"
+        return f"{self.base_tracking_url}/?session_id={session_id}"
     
 
     def _format_phone_number_(self, contact: TrustedContactsModel):

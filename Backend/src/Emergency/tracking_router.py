@@ -7,7 +7,7 @@ router = APIRouter(tags=["Tracking"])
 
 templates = Jinja2Templates(directory="templates")
 
-@router.get("/track/{session_id}", response_class=HTMLResponse)
+@router.get("/track", response_class=HTMLResponse)
 async def tracking_page(
     request: Request,
     session_id: str,

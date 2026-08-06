@@ -29,10 +29,10 @@ def alert(location:locationAlertSchema, background_tak:BackgroundTasks, db:Sessi
 
     message = service._tracking_message_(current_user,tracking_url, location.message)
 
-    # for contact in contacts:
-    #     phone_no = service._format_phone_number_(contact)
+    for contact in contacts:
+        phone_no = service._format_phone_number_(contact)
 
-    #     background_tak.add_task(send_sms, service, phone_no, message)
+        background_tak.add_task(send_sms, service, phone_no, message)
 
     return {
         "message": "Emergency session started successfully.",
