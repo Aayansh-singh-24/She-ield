@@ -19,7 +19,7 @@
 # 📱 Application Preview
 
 <p align="center">
-<img src="./assets/app-preview.jpeg" width="900" alt="She-ield Preview">
+<img src="./assets/app-preview.jpeg" width="650" alt="She-ield Preview">
 </p>
 
 > Replace the image above with your application screenshot or an animated GIF for a better presentation.
@@ -46,39 +46,18 @@
 <img src="./assets/architecture.png" width="950" alt="System Architecture">
 </p>
 
-> Replace this image with your architecture diagram.
 
 ---
 
 # 🔗 Project Links
 
-### 🌐 Frontend Repository
+- 🌐 **Frontend Repository:** [Fronted-Safe_her](https://github.com/Aayansh-singh-24/Fronted-Safe_her)
+- 📚 **Swagger API Docs:** [Swagger UI](https://your-backend-domain/docs)
+- 📖 **ReDoc API Docs:** [ReDoc](https://your-backend-domain/redoc)
 
-```text
-https://github.com/Aayansh-singh-24/Fronted-Safe_her
-```
-
-```
-
-### 📚 Backend API Documentation (Swagger)
-
-```text
-https://your-backend-domain/docs
-```
-
-### 📖 ReDoc Documentation
-
-```text
-https://your-backend-domain/redoc
-```
-
----
-
-# ⚠️ Backend Availability Notice
-
-> **The backend is currently hosted on a temporary cloud instance.**
+> **⚠️ Note**
 >
-> The API documentation links above may become unavailable or change because the hosting server expires periodically. If the documentation is inaccessible, please check the latest deployment or run the backend locally.
+> The backend is hosted on a temporary cloud server. The API documentation links may become unavailable or change when the server expires. If the links are not working, please refer to the latest deployment information or run the backend locally.
 
 ---
 
@@ -165,11 +144,11 @@ http://127.0.0.1:8000/docs
 
 | login | Live Tracking |
 |------|---------------|
-| <img src="assets/login.jpeg" width="250"> | <img src="assets/tracking.jpeg" width="250"> |
+| <img src="assets/login.jpeg" width="150"> | <img src="assets/tracking.jpeg" width="150"> |
 
 | Trusted Contacts | SOS |
 |------------------|-----|
-| <img src="assets/contacts.jpeg" width="250"> | <img src="assets/sos.jpeg" width="250"> |
+| <img src="assets/contacts.jpeg" width="150"> | <img src="assets/sos.jpeg" width="150"> |
 
 
 ---
