@@ -1,5 +1,6 @@
 # 🛡️ She-ield
 
+
 <p align="center">
   <h2 align="center">AI-Powered Women's Safety Platform</h2>
 
@@ -25,15 +26,14 @@
 
 ## ✨ Features
 
-- 🚨 One-Tap SOS Emergency Alerts
-- 📍 Real-Time Live Location Tracking
-- 👥 Trusted Contact Management
-- 🔐 JWT-Based Secure Authentication
-- 🤖 AI-Powered Threat Detection
-- 🎤 Emergency Audio Analysis
-- 📷 Evidence Upload Support
-- 🔄 Real-Time Communication using WebSockets
-- ⚡ High Performance FastAPI Backend
+- 🚨 **One-Tap SOS Emergency Alerts:** Instantly notify trusted contacts with your live location via SMS.
+- 📍 **Real-Time Live Location Tracking:** Share a live Google Maps link with your emergency contacts.
+- 👥 **Trusted Contact Management:** Easily add, edit, and remove emergency contacts.
+- 🔐 **Secure Authentication:** JWT-based user authentication with OTP email verification.
+- 🤖 **AI-Powered Threat Detection:** An ML microservice analyzes audio recordings for distress keywords (e.g., "help", "bachao") and scream signatures.
+- 🎤 **Emergency Audio Analysis:** Upload audio files for threat analysis and evidence storage.
+- 🔄 **Real-Time Communication:** Utilizes WebSockets for instantaneous updates.
+- ⚡ **High-Performance Backend:** Built with FastAPI for speed and scalability.
 
 ---
 
@@ -62,9 +62,7 @@ https://your-backend-domain/redoc
 
 > **⚠️ Backend Availability**
 >
-> The backend is hosted on a temporary cloud instance.
-> The API documentation links above may change or become unavailable when the server expires.
-> If the documentation is inaccessible, please run the backend locally.
+> The backend might be hosted on a temporary cloud instance. The API documentation links above may change or become unavailable. If the documentation is inaccessible, please run the backend locally.
 
 ---
 
@@ -73,31 +71,32 @@ https://your-backend-domain/redoc
 | Category | Technologies |
 |-----------|--------------|
 | **Backend** | FastAPI, SQLAlchemy, PostgreSQL |
-| **Authentication** | JWT |
+| **Authentication** | JWT, OTP Verification |
 | **Realtime** | WebSockets |
-| **AI / ML** | Python, Speech Recognition, Threat Detection |
-| **Deployment** | Docker, Docker Compose, AWS EC2 |
+| **AI / ML** | Python, SpeechRecognition, NumPy |
+| **Deployment** | Docker, Docker Compose |
 
 ---
 
 ## 📂 Repository Structure
 
 ```text
-She-ield
+She-ield/
 │
-├── backend/
-├── ml-service/
+├── Backend/
+│   ├── src/
+│   ├── main.py
+│   └── requirements.txt
+│
+├── ML-Services/
+│   ├── main.py
+│   └── requirements.txt
+│
 ├── assets/
 │   ├── architecture.png
-│   ├── login.jpeg
-│   ├── home.jpeg
-│   ├── tracking.jpeg
-│   ├── contacts.jpeg
-│   ├── sos.jpeg
-│   └── profile.jpeg
+│   └── *.jpeg
 │
-├── docker-compose.yml
-├── requirements.txt
+├── docker-compose.yaml
 └── README.md
 ```
 
@@ -109,44 +108,53 @@ She-ield
 
 ```bash
 git clone https://github.com/Aayansh-singh-24/She-ield.git
-
 cd She-ield
 ```
 
----
+### Setup Environment
+
+Create a `.env` file inside the `Backend/` directory and configure the necessary environment variables based on `src/utils/settings.py`. At a minimum, you will need:
+
+```env
+DATABASE_URL="postgresql://user:password@host/dbname"
+SECRET_KEY="your_super_secret_key"
+ALGORITHM="HS256"
+EXP_TIME=30
+PROFILE_DIR="profile_uploads"
+```
 
 ### Install Dependencies
 
-```bash
-cd backend
+Navigate to the backend directory and install the required Python packages.
 
+```bash
+cd Backend
 pip install -r requirements.txt
 ```
 
----
+### Run Backend Server
 
-### Run Backend
+Start the development server using Uvicorn.
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
 
-Backend will be available at
+The backend API will be available at `http://127.0.0.1:8000`.
 
-```
-http://127.0.0.1:8000
-```
+- **Swagger Documentation:** `http://127.0.0.1:8000/docs`
+- **ReDoc Documentation:** `http://127.0.0.1:8000/redoc`
 
-Swagger Documentation
+### Run with Docker
 
-```
-http://127.0.0.1:8000/docs
-```
+For a complete setup including the database and ML service, you can use Docker Compose.
 
-ReDoc Documentation
+1.  Create a `docker-compose.env` file in the root directory for PostgreSQL credentials.
+2.  Ensure your `Backend/.env` file is correctly configured.
+3.  Run the following command from the root directory:
 
-```
-http://127.0.0.1:8000/redoc
+```bash
+docker-compose up --build
 ```
 
 ---
