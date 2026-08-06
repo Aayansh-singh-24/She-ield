@@ -1,45 +1,43 @@
 # 🛡️ She-ield
 
 <p align="center">
-  <h3 align="center">AI-Powered Women's Safety Platform</h3>
+  <h2 align="center">AI-Powered Women's Safety Platform</h2>
+
   <p align="center">
-    Real-time emergency assistance • Live Location Tracking • AI Threat Detection • Trusted Contacts
+    Real-Time Safety • Live Location Tracking • AI Threat Detection • Emergency Response
   </p>
 </p>
 
 ---
 
-# 📱 Application Preview
+## 📱 Application Preview
 
 <p align="center">
-  <img src="./assets/login.jpeg" width="180" alt="Login Screen"/>
-  <img src="./assets/home.jpeg" width="180" alt="Home Screen"/>
-  <img src="./assets/tracking.jpeg" width="180" alt="Live Tracking"/>
-</p>
-
-<p align="center">
-  <img src="./assets/contacts.jpeg" width="180" alt="Trusted Contacts"/>
-  <img src="./assets/sos.jpeg" width="180" alt="SOS Screen"/>
-  <img src="./assets/profile.jpeg" width="180" alt="Profile Screen"/>
+  <img src="./assets/login.jpeg" alt="Login" width="180">
+  <img src="./assets/home.jpeg" alt="Home" width="180">
+  <img src="./assets/tracking.jpeg" alt="Tracking" width="180">
+  <img src="./assets/contacts.jpeg" alt="Contacts" width="180">
+  <img src="./assets/sos.jpeg" alt="SOS" width="180">
+  <img src="./assets/profile.jpeg" alt="Profile" width="180">
 </p>
 
 ---
 
-# ✨ Features
+## ✨ Features
 
 - 🚨 One-Tap SOS Emergency Alerts
 - 📍 Real-Time Live Location Tracking
 - 👥 Trusted Contact Management
-- 🔐 Secure JWT Authentication
-- 🤖 AI-Based Threat Detection
+- 🔐 JWT-Based Secure Authentication
+- 🤖 AI-Powered Threat Detection
 - 🎤 Emergency Audio Analysis
-- 📷 Emergency Evidence Upload
+- 📷 Evidence Upload Support
 - 🔄 Real-Time Communication using WebSockets
 - ⚡ High Performance FastAPI Backend
 
 ---
 
-# 🏗️ System Architecture
+## 🏗️ System Architecture
 
 <p align="center">
   <img src="./assets/architecture.png" width="900" alt="She-ield Architecture"/>
@@ -47,36 +45,42 @@
 
 ---
 
-# 🔗 Project Links
+## 🔗 Project Links
 
-### Frontend Repository
+### 🌐 Frontend Repository
 
-👉 https://github.com/Aayansh-singh-24/Fronted-Safe_her
+**Frontend:**  
+https://github.com/Aayansh-singh-24/Fronted-Safe_her
 
-### Backend API Documentation
+### 📚 Backend API Documentation
 
-- **Swagger UI:** https://your-backend-domain/docs
-- **ReDoc:** https://your-backend-domain/redoc
+**Swagger UI:**  
+https://your-backend-domain/docs
 
-> ⚠️ **Backend Notice**
+**ReDoc:**  
+https://your-backend-domain/redoc
+
+> **⚠️ Backend Availability**
 >
-> The backend is hosted on a temporary cloud server. The API documentation links may change or become unavailable if the hosting instance expires. If the links are not accessible, please run the backend locally or refer to the latest deployment.
+> The backend is hosted on a temporary cloud instance.
+> The API documentation links above may change or become unavailable when the server expires.
+> If the documentation is inaccessible, please run the backend locally.
 
 ---
 
-# 🚀 Tech Stack
+## 🚀 Tech Stack
 
 | Category | Technologies |
-|----------|--------------|
+|-----------|--------------|
 | **Backend** | FastAPI, SQLAlchemy, PostgreSQL |
-| **Authentication** | JWT Authentication |
+| **Authentication** | JWT |
 | **Realtime** | WebSockets |
 | **AI / ML** | Python, Speech Recognition, Threat Detection |
-| **DevOps** | Docker, Docker Compose, AWS EC2 |
+| **Deployment** | Docker, Docker Compose, AWS EC2 |
 
 ---
 
-# 📂 Repository Structure
+## 📂 Repository Structure
 
 ```text
 She-ield
@@ -99,9 +103,9 @@ She-ield
 
 ---
 
-# ⚙️ Getting Started
+## ⚙️ Getting Started
 
-## Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/Aayansh-singh-24/She-ield.git
@@ -111,17 +115,23 @@ cd She-ield
 
 ---
 
-## Backend Setup
+### Install Dependencies
 
 ```bash
 cd backend
 
 pip install -r requirements.txt
+```
 
+---
+
+### Run Backend
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-Backend Server
+Backend will be available at
 
 ```
 http://127.0.0.1:8000
@@ -141,17 +151,20 @@ http://127.0.0.1:8000/redoc
 
 ---
 
-# 🔮 Future Improvements
+## 🔮 Roadmap
 
-- Offline Threat Detection
-- Push Notifications
-- Background Location Tracking
-- Wearable Device Integration
-- Voice Distress Detection
-- End-to-End Encrypted Emergency Sessions
+- ✅ Live Location Tracking
+- ✅ Trusted Contacts
+- ✅ SOS Alerts
+- ✅ JWT Authentication
+- 🚧 Offline Threat Detection
+- 🚧 Background Location Updates
+- 🚧 Push Notifications
+- 🚧 Voice Distress Detection
+- 🚧 Wearable Device Integration
 
 ---
 
-# 📄 License
+## 📄 License
 
 This project is licensed under the **MIT License**.
