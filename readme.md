@@ -15,11 +15,9 @@
 
 <p align="center">
   <img src="./assets/login.jpeg" alt="Login" width="180">
-  <img src="./assets/home.jpeg" alt="Home" width="180">
   <img src="./assets/tracking.jpeg" alt="Tracking" width="180">
   <img src="./assets/contacts.jpeg" alt="Contacts" width="180">
   <img src="./assets/sos.jpeg" alt="SOS" width="180">
-  <img src="./assets/profile.jpeg" alt="Profile" width="180">
 </p>
 
 ---
@@ -66,7 +64,7 @@ https://your-backend-domain/redoc
 
 ---
 
-## 🚀 Tech Stack
+##  Tech Stack
 
 | Category | Technologies |
 |-----------|--------------|
@@ -111,18 +109,6 @@ git clone https://github.com/Aayansh-singh-24/She-ield.git
 cd She-ield
 ```
 
-### Setup Environment
-
-Create a `.env` file inside the `Backend/` directory and configure the necessary environment variables based on `src/utils/settings.py`. At a minimum, you will need:
-
-```env
-DATABASE_URL="postgresql://user:password@host/dbname"
-SECRET_KEY="your_super_secret_key"
-ALGORITHM="HS256"
-EXP_TIME=30
-PROFILE_DIR="profile_uploads"
-```
-
 ### Install Dependencies
 
 Navigate to the backend directory and install the required Python packages.
@@ -157,21 +143,6 @@ For a complete setup including the database and ML service, you can use Docker C
 docker-compose up --build
 ```
 
----
-
-## 🔮 Roadmap
-
-- ✅ Live Location Tracking
-- ✅ Trusted Contacts
-- ✅ SOS Alerts
-- ✅ JWT Authentication
-- 🚧 Offline Threat Detection
-- 🚧 Background Location Updates
-- 🚧 Push Notifications
-- 🚧 Voice Distress Detection
-- 🚧 Wearable Device Integration
-
----
 
 ## 📄 License
 
