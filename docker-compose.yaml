@@ -23,7 +23,7 @@ services:
 
     ports:
       - "8001:8001"
-
+      
   postgres:
     image: postgres:17.6
     container_name: sheield-postgres

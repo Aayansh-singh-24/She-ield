@@ -16,3 +16,5 @@ argon2-cffi
 aiofiles
 
 alembic
+
+psycopg2-binary
