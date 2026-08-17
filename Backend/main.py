@@ -23,7 +23,7 @@ Base.metadata.create_all(bind=engine)
 
 # from sqlalchemy import inspect
 
-app = FastAPI(title="SafeHer Backend")
+app = FastAPI(title="She-ield Backend")
 
 app.include_router(contact_route.router)
 app.include_router(location_route.router)

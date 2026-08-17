@@ -5,13 +5,13 @@ from src.emergency.schema import LiveLocationSchema
 from src.user.models import UserModel
 
 from sqlalchemy.orm import Session
-from src.utils.db import SessionLocal
+# from src.utils.db import SessionLocal
 from src.user.controller import websocket_authenticate
 
 
-async def live_location(websocket:WebSocket, session_id:str):
+async def live_location(websocket:WebSocket, session_id:str, db:Session):
     
-    db = SessionLocal()
+    # db = SessionLocal()
     current_user = await websocket_authenticate(websocket, db)
 
     service = EmergencyService(db)
@@ -52,16 +52,16 @@ async def live_location(websocket:WebSocket, session_id:str):
         await websocket.close(code=1011,reason=str(e))
 
 
-async def track(websocket:WebSocket, session_id:str):
+async def track(websocket:WebSocket, session_id:str, db:Session):
 
-    db = SessionLocal()
+    # db = SessionLocal()
     
     service = EmergencyService(db)
 
     try:
         service.validate_active_session(session_id)
 
-         # Validate that session exists and is active
+        # Validate that session exists and is active
         service.validate_active_session(session_id)
 
         # Accept guardian connection
