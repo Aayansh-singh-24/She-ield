@@ -7,9 +7,9 @@ class Setting(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     EXP_TIME: int
-    UPLOAD_DIR : str = "uploads"
+    UPLOAD_DIR : str
     PROFILE_DIR : str
-
+    
     # twillio credentials
     TWILIO_ACCOUNT_SID : str
     TWILIO_AUTH_TOKEN : str
