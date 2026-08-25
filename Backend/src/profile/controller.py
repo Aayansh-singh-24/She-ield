@@ -132,7 +132,7 @@ class UserService:
                     UserModel.email == data["email"]
                 ).first()
 
-            if existing_user and existing_user.id != self.current_user.id:
+            if existing_user and data["email"] == self.current_user.email :
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Email already exists")
 
             self.current_user.email = data["email"]
@@ -143,7 +143,7 @@ class UserService:
                     UserModel.username == data["username"]
                 ).first()
 
-            if existing_user and existing_user.id != self.current_user.id:
+            if existing_user and data['username'] == self.current_user.username:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Username already exists")
 
             self.current_user.username = data["username"]
