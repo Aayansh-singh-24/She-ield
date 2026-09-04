@@ -125,7 +125,7 @@ def is_authenticated(request:Request,db:Session=Depends(get_db)):
 async def websocket_authenticate(websocket:WebSocket, db:Session):
     token = websocket.headers.get("authorization")
     if not token:
-        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Authorization header missing")
+        await websocket.close(code=1008)
     token=token.split(" ")[-1]
     try:
         data=jwt.decode(token,setting.SECRET_KEY,setting.ALGORITHM)

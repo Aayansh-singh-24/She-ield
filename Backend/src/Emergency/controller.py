@@ -25,7 +25,9 @@ async def live_location(websocket:WebSocket, session_id:str, db:Session):
         while True:
 
             data = await websocket.receive_json() # store data send by user location 
-
+            if data is None:
+                pass
+            
             payload = LiveLocationSchema(**data)
 
             location = service.save_location(session_id, payload, current_user)
@@ -59,7 +61,6 @@ async def track(websocket:WebSocket, session_id:str, db:Session):
     service = EmergencyService(db)
 
     try:
-        service.validate_active_session(session_id)
 
         # Validate that session exists and is active
         service.validate_active_session(session_id)

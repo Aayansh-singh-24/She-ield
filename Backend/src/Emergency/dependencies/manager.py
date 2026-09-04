@@ -28,7 +28,7 @@ class ConnectionManager:
         return self.active_session[session_id]
 
     
-    # delete teh non-usable seesion info from active session dictionary
+    # delete the non-usable seesion info from active session dictionary
     def _cleanup_(self, session_id:str):
         
         if session_id not in self.active_session:

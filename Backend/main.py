@@ -33,7 +33,11 @@ app.include_router(profile_routes.router)
 app.include_router(websocket.router)
 app.include_router(tracking_router.router)
 
+# ###########################################################################
 
+# print(engine.pool.status())
+
+# ############################################################################
 
 app.add_middleware(
     CORSMiddleware,
@@ -43,17 +47,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount(
-    "/static",
-    StaticFiles(directory="static"),
-    name="static"
-)
-
-templates = Jinja2Templates(directory="templates")
-
 @app.post("/detect-distress")
 async def detect_distress(file: UploadFile = File(...)):
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=30.0) as client: # Create every client for ML-service calling
         try:
             content = await file.read()
             files = {'file': (file.filename, content, file.content_type)}
