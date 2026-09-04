@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import httpx
 from src.utils.db import Base, engine
 from src.user.models import UserModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,7 +35,7 @@ app.add_middleware(
 
 @app.post("/detect-distress")
 async def detect_distress(file: UploadFile = File(...)):
-    async with http.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         try:
             content = await file.read()
             files = {'file': (file.filename, content, file.content_type)}

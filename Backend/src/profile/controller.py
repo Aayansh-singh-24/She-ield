@@ -45,7 +45,10 @@ async def upload_profile(db:Session, file:UploadFile, current_user:UserModel):
 
     if existing_profile:
         if os.path.exists(existing_profile.filepath):
-            os.remove(existing_profile.filepath)
+            try:
+                os.remove(existing_profile.filepath)
+            except Exception:
+                pass
 
         if file.filename is None:
             raise HTTPException(status_code=400,detail="Filename is missing")
