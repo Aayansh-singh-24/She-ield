@@ -5,7 +5,7 @@ from src.user.controller import is_authenticated
 from src.user.models import UserModel
 from src.audio import controller
 
-router = APIRouter(prefix="/recording")
+router = APIRouter(prefix="/recording", tags=["Recording"])
 
 @router.post("/upload_audio", status_code=status.HTTP_201_CREATED)
 @router.post("/audio", status_code=status.HTTP_201_CREATED)

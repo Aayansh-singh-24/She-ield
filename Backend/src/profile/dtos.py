@@ -10,8 +10,9 @@ class UpdateUserSchema(BaseModel):
 class UpdateUserResponseSchema(BaseModel):
     id: int
     name: str
-    username: str
-    email: str
+    username: Optional[str] = None
+    email: Optional[str] = None
+
 
 class UpdatePassword(BaseModel):
     current_password : str
