@@ -15,12 +15,17 @@ from src.utils.settings import setting
 
 from src.emergency import websocket, tracking_router
 
+import sentry_sdk
 
 Base.metadata.create_all(bind=engine)
 
 # from sqlalchemy import inspect
 
+if setting.SENTRY_DSN and setting.FastAPI != "development":
+    sentry_sdk.init(dsn=setting.SENTRY_DSN, enable_tracing=True)
+
 app = FastAPI(title="She-ield Backend")
+
 
 app.include_router(contact_route.router)
 app.include_router(location_route.router)

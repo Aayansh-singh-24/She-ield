@@ -1,0 +1,99 @@
+name : deploy-workflow
+
+on:
+    push:
+        branches:
+            - main
+    
+    workflow_dispatch:
+    
+
+jobs:
+    # Backend test
+
+    test:
+        name: Test-Backend
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: Backend
+        
+        steps: 
+            - name: checkout-repository
+              uses: actions/checkout@v4
+
+            - name: setup-python
+              uses: actions/setup-python@v5
+              with:
+                python-version: 3.12.8
+                
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+
+            - name: pytest
+              run: pytest
+
+
+        # build the docker for backend
+
+    docker-build:
+        name: Build docker Images
+        runs-on: ubuntu-latest
+        needs: test
+
+        steps:
+            - name: checkout-repository
+              uses: actions/checkout@v4
+            
+            - name: build backend image
+              run: |
+                    docker build \
+                    -t sheield-backend:test \
+                    ./ Backend
+            
+            - name: build ML images
+              run: |
+                    docker build \
+                    -t sheield-ml:test \
+                    ./ ML-Services
+
+    deploy:
+        name: Deploy to EC2
+        runs-on: ubuntu-latest
+        needs: docker-build
+
+        steps:
+        - name: Deploy application
+          uses: appleboy/ssh-action@v1.2.2
+          with:
+                host: ${{ secrets.EC2_HOST }}
+                username: ${{ secrets.EC2_USER }}
+                key: ${{ secrets.EC2_SSH_KEY }}
+                script: |
+                    set -e
+
+                    cd ~/She-ield
+
+                    echo "Pulling latest code..."
+                    git pull origin main
+
+                    echo "Stopping old containers..."
+                    docker compose down
+
+                    echo "Building latest images..."
+                    docker compose build --no-cache
+
+                    echo "Starting application..."
+                    docker compose up -d
+
+                    echo "Removing unused Docker images..."
+                    docker image prune -f
+
+                    echo "Checking containers..."
+                    docker compose ps
+
+                    echo "Deployment completed."
+
