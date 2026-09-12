@@ -1,4 +1,4 @@
-from pydantic_settings import SettingsConfigDict, BaseSettings
+from pydantic_settings import SettingsConfigDict, BaseSettings, HttpUrl
 from typing import Optional
 
 class Setting(BaseSettings):
@@ -21,6 +21,10 @@ class Setting(BaseSettings):
     SMTP_USERNAME: Optional[str] = None
     SMTP_PASSWORD: Optional[str] = None
     SMTP_FROM_EMAIL: Optional[str] = None
+
+    # production
+    FASTAPI: str = "development"
+    SENTRY_DSN: HttpUrl | None = None
 
 
 setting = Setting(**{})

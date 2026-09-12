@@ -18,3 +18,5 @@ aiofiles
 alembic
 
 psycopg2-binary
+
+sentry-sdk[fastapi]
