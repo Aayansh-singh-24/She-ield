@@ -21,7 +21,8 @@ Base.metadata.create_all(bind=engine)
 
 # from sqlalchemy import inspect
 
-if setting.SENTRY_DSN and setting.FastAPI != "development":
+
+if setting.SENTRY_DSN and setting.FASTAPI_ENV == "PRODUCTION":
     sentry_sdk.init(dsn=setting.SENTRY_DSN, enable_tracing=True)
 
 app = FastAPI(title="She-ield Backend")
@@ -62,6 +63,5 @@ async def detect_distress(file: UploadFile = File(...)):
 @app.get("/")
 def home():
     return {"message": "SafeHer Backend API is running. Access API documentation at /docs"}
-
 
 

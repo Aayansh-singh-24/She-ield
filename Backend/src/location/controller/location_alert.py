@@ -5,14 +5,28 @@ from src.location.schema.dtos import locationAlertSchema
 
 from src.user.models import UserModel
 from src.emergency.dependencies.service import EmergencyService
+from twilio.base.exceptions import TwilioRestException
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def send_sms(service:EmergencyService, phone_no:str,message:str):
-    service.client.messages.create(
-        body=message,
-        from_=service.phoneNo,
-        to=phone_no
-    )
+    try:
+        service.client.messages.create(
+            body=message,
+            from_=service.phoneNo,
+            to=phone_no
+        )
+
+        logger.info("Emergency SMS sent successfully to %s", phone_no)
+    except TwilioRestException as exc:
+        logger.error(
+            "Failed to send emergency SMS to %s: %s",
+            phone_no,
+            exc
+        )
 
 def alert(location:locationAlertSchema, background_tak:BackgroundTasks, db:Session, current_user:UserModel):
 

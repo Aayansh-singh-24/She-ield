@@ -1,4 +1,5 @@
-from pydantic_settings import SettingsConfigDict, BaseSettings, HttpUrl
+from pydantic_settings import SettingsConfigDict, BaseSettings
+from pydantic import HttpUrl
 from typing import Optional
 
 class Setting(BaseSettings):
@@ -23,7 +24,7 @@ class Setting(BaseSettings):
     SMTP_FROM_EMAIL: Optional[str] = None
 
     # production
-    FASTAPI: str = "development"
+    FASTAPI_ENV: str 
     SENTRY_DSN: HttpUrl | None = None
 
 
