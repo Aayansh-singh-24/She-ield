@@ -21,15 +21,11 @@ jobs:
             
             - name: build backend image
               run: |
-                    docker build \
-                    -t sheield-backend:test \
-                    ./ Backend
+                    docker build -t sheield-backend:test ./ Backend
             
             - name: build ML images
               run: |
-                    docker build \
-                    -t sheield-ml:test \
-                    ./ ML-Services
+                    docker build -t sheield-ml:test ./ ML-Services
 
     deploy:
         name: Deploy to EC2
