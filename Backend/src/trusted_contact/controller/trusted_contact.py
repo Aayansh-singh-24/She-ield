@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.trusted_contact.models.model import TrustedContactsModel
+from src.exception.custom import ContactNotFoundException
 from src.trusted_contact.schema.dtos import TrustedContactCreateSchema, TrustedContactUpdate
 from src.user.models import UserModel
 
@@ -69,10 +70,7 @@ def update_contact(db: Session, current_user: UserModel, contact_id: int, data: 
     ).first()
 
     if not contact:
-        raise HTTPException(
-            status_code=404,
-            detail="Contact not found"
-        )
+        raise ContactNotFoundException()
 
     if data.name is not None:
         contact.name = data.name # type: ignore
@@ -113,10 +111,7 @@ def delete_contact(db: Session, current_user: UserModel, contact_id: int):
     ).first()
 
     if not contact:
-        raise HTTPException(
-            status_code=404,
-            detail="Contact not found"
-        )
+        raise ContactNotFoundException()
 
     db.delete(contact)
     db.commit()

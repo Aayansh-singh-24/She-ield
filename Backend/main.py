@@ -1,29 +1,29 @@
 import httpx
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+
+
+
 from src.utils.db import Base, engine
 from src.user.models import UserModel
-from fastapi.middleware.cors import CORSMiddleware
-
-
 from src.trusted_contact.routes import contact_route
 from src.location.routes import location_route
 from src.user import user_route
 from src.audio import audio_routes
 from src.profile import profile_routes
 from src.utils.settings import setting
-
+from src.exception.base import AppException
+from src.exception.handlers import app_exception_handler, http_exception_handler, validation_exception_handler, global_exception_handler
+from src.utils.sentry import init_sentry
 
 from src.emergency import websocket, tracking_router
 
-import sentry_sdk
+init_sentry()
 
 Base.metadata.create_all(bind=engine)
-
-# from sqlalchemy import inspect
-
-
-if setting.SENTRY_DSN and setting.FASTAPI_ENV == "PRODUCTION":
-    sentry_sdk.init(dsn=setting.SENTRY_DSN, enable_tracing=True)
 
 app = FastAPI(title="She-ield Backend")
 
@@ -47,6 +47,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_exception_handler(AppException,app_exception_handler)
+app.add_exception_handler(StarletteHTTPException,http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception,global_exception_handler)
+
 @app.post("/detect-distress")
 async def detect_distress(file: UploadFile = File(...)):
     async with httpx.AsyncClient(timeout=30.0) as client:
@@ -63,5 +68,3 @@ async def detect_distress(file: UploadFile = File(...)):
 @app.get("/")
 def home():
     return {"message": "SafeHer Backend API is running. Access API documentation at /docs"}
-
-
