@@ -29,6 +29,7 @@ async def app_exception_handler(
 
 
 
+# Exception for Basic CURD operation
 async def http_exception_handler(
     request: Request,
     exc: StarletteHTTPException,

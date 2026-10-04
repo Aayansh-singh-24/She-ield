@@ -19,8 +19,22 @@ class ContactNotFoundException(AppException):
         )
 
 
+
 class ContactAlreadyExist(AppException):
-    pass
+    def __init__(self):
+        super().__init__(
+            message = "Trusted Contact already exist",
+            status_code = status.HTTP_409_CONFLICT,
+            error_code = "CONTACT_EXIST"
+        )
+
+class ContactNumberAlreadyExist(AppException):
+    def __init__(self):
+        super().__init__(
+            message = "Contact Number already exist",
+            status_code = status.HTTP_409_CONFLICT,
+            error_code = "CONTACT_NUMBER_EXIST"
+        )
 
 class UnauthorizedException(AppException):
     def __init__(self):
