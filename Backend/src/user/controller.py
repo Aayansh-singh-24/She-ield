@@ -3,6 +3,7 @@ from http import HTTPStatus
 from src.user.dtos import UserSchema,LoginSchema
 from sqlalchemy.orm import Session
 from fastapi import HTTPException,Request,Depends,BackgroundTasks
+from fastapi import WebSocket
 from src.user.models import UserModel, OTPVerificationModel
 from src.utils.db import get_db
 from pwdlib import PasswordHash
@@ -25,32 +26,34 @@ def register(body:UserSchema,db:Session,background_tasks:BackgroundTasks):
     if is_user:
         raise HTTPException(400,detail="Username already exists...")
     
+    # Also check if username is currently pending in OTPVerificationModel and not expired
+    pending_user=db.query(OTPVerificationModel).filter(
+        OTPVerificationModel.username==body.username,
+        OTPVerificationModel.expires_at > datetime.now()
+    ).first()
+    if pending_user:
+        raise HTTPException(400,detail="Username is already registered and verification is pending...")
+
     is_user=db.query(UserModel).filter(UserModel.email==body.email).first()
     if is_user:
         raise HTTPException(400,detail="Email already exists...")
     
     hash_password=get_password_hash(body.password)
 
-    new_user=UserModel(
-        name=body.name,
-        username=body.username,
-        hash_password=hash_password,
-        email=body.email,
-        is_verified=False  # default unverified
-    )
-
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-     # Generate and save OTP
+    # Generate and save OTP with user credentials in OTPVerificationModel instead of UserModel
     otp = generate_otp()
     expires_at = datetime.now() + timedelta(minutes=10)
+    
+    # Remove older OTPs / pending registrations for this email
+    db.query(OTPVerificationModel).filter(OTPVerificationModel.email == body.email).delete()
     
     otp_entry = OTPVerificationModel(
         email=body.email,
         otp_code=otp,
-        expires_at=expires_at
+        expires_at=expires_at,
+        name=body.name,
+        username=body.username,
+        hash_password=hash_password
     )
     db.add(otp_entry)
     db.commit()
@@ -58,7 +61,14 @@ def register(body:UserSchema,db:Session,background_tasks:BackgroundTasks):
     # Send OTP in background
     background_tasks.add_task(send_otp_email, body.email, otp)
 
-    return new_user
+    # Return temporary user object to satisfy the UserResponseSchema response model
+    return {
+        "id": 0,
+        "name": body.name,
+        "username": body.username,
+        "email": body.email
+    }
+
 
 def login_user(body:LoginSchema,db:Session):
     user=db.query(UserModel).filter(UserModel.username==body.username).first()
@@ -74,7 +84,7 @@ def login_user(body:LoginSchema,db:Session):
             detail="Your email is not verified. Please verify using OTP."
         )
 
-    exp_time=datetime.now()+timedelta(minutes=30)
+    exp_time=datetime.now()+timedelta(minutes=setting.EXP_TIME)
     token=jwt.encode({"_id":user.id,"exp":exp_time.timestamp()},setting.SECRET_KEY,setting.ALGORITHM)
 
 
@@ -112,6 +122,51 @@ def is_authenticated(request:Request,db:Session=Depends(get_db)):
     
 
 
+async def websocket_authenticate(websocket: WebSocket, db: Session):
+    token = websocket.headers.get("authorization")
+    if not token:
+        token = websocket.query_params.get("token")
+
+    if not token:
+        try:
+            await websocket.close(code=1008)
+        except Exception:
+            pass
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Authentication token missing")
+
+    if token.startswith("Bearer "):
+        token = token[7:]
+    elif " " in token:
+        token = token.split(" ")[-1]
+
+    try:
+        data = jwt.decode(token, setting.SECRET_KEY, setting.ALGORITHM)
+        user_id = data.get("_id")
+        exp_time = int(data["exp"])
+        current_time = datetime.now().timestamp()
+        if current_time > exp_time:
+            try:
+                await websocket.close(code=1008)
+            except Exception:
+                pass
+            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Token expired")
+
+        user = db.query(UserModel).filter(UserModel.id == user_id).first()
+        if not user:
+            try:
+                await websocket.close(code=1008)
+            except Exception:
+                pass
+            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="User not found")
+
+        return user
+    except jwt.InvalidTokenError:
+        try:
+            await websocket.close(code=1008)
+        except Exception:
+            pass
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid token")
+
     ## otp ke liye
 
 def generate_otp() -> str:
@@ -133,11 +188,25 @@ def verify_otp_code(email: str, otp_code: str, db: Session):
         db.commit()
         raise HTTPException(status_code=400, detail="OTP code has expired")
 
-    # Mark user as verified
+    # Check if user already exists (fallback for existing user verification)
     user = db.query(UserModel).filter(UserModel.email == email).first()
     if user:
         user.is_verified = True
         db.commit()
+    elif otp_record.username:
+        # Create user in UserModel since OTP is verified
+        new_user = UserModel(
+            name=otp_record.name or "",
+            username=otp_record.username,
+            hash_password=otp_record.hash_password or "",
+            email=otp_record.email,
+            is_verified=True
+        )
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+    else:
+        raise HTTPException(status_code=400, detail="Registration details missing in verification record")
         
     # Clean up OTP records
     db.query(OTPVerificationModel).filter(OTPVerificationModel.email == email).delete()
@@ -147,25 +216,31 @@ def verify_otp_code(email: str, otp_code: str, db: Session):
 
 def resend_otp_code(email: str, db: Session, background_tasks: BackgroundTasks):
     user = db.query(UserModel).filter(UserModel.email == email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-        
-    if user.is_verified:
+    if user and user.is_verified:
         return {"message": "Email is already verified"}
+
+    # Find the pending registration in OTPVerificationModel
+    pending_reg = db.query(OTPVerificationModel).filter(OTPVerificationModel.email == email).first()
+    if not user and not pending_reg:
+        raise HTTPException(status_code=404, detail="User registration not found")
 
     # Generate and update OTP
     otp = generate_otp()
     expires_at = datetime.now() + timedelta(minutes=10)
     
-    # Remove older OTPs for this email
-    db.query(OTPVerificationModel).filter(OTPVerificationModel.email == email).delete()
-    
-    otp_entry = OTPVerificationModel(
-        email=email,
-        otp_code=otp,
-        expires_at=expires_at
-    )
-    db.add(otp_entry)
+    if pending_reg:
+        pending_reg.otp_code = otp
+        pending_reg.expires_at = expires_at
+    else:
+        # User exists but is unverified (fallback for existing users)
+        db.query(OTPVerificationModel).filter(OTPVerificationModel.email == email).delete()
+        otp_entry = OTPVerificationModel(
+            email=email,
+            otp_code=otp,
+            expires_at=expires_at
+        )
+        db.add(otp_entry)
+        
     db.commit()
 
     background_tasks.add_task(send_otp_email, email, otp)
