@@ -19,7 +19,7 @@ import sentry_sdk
 
 Base.metadata.create_all(bind=engine)
 
-# from sqlalchemy import inspect
+from sqlalchemy import inspect
 
 
 if setting.SENTRY_DSN and setting.FASTAPI_ENV == "PRODUCTION":

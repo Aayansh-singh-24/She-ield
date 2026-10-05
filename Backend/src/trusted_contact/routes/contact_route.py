@@ -18,7 +18,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create_contact", response_model=TrustedContactResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/create_contact", status_code=status.HTTP_201_CREATED)
 def create_contact(
     data: TrustedContactCreateSchema,
     db: Session = Depends(get_db),
@@ -27,28 +27,28 @@ def create_contact(
     return trusted_contact.add_contact(db, current_user, data)
 
 
-@router.get("/read_contacts", response_model=list[TrustedContactResponse],status_code=status.HTTP_200_OK)
-def read_contacts(
+@router.get("/read_contact", response_model=list[TrustedContactResponse],status_code=status.HTTP_200_OK)
+def read_contact(
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.get_contacts(db, current_user)
+    return trusted_contact.get_contact(db, current_user)
 
 
-@router.put("/edit_contact/{contact_id}", response_model=TrustedContactResponse, status_code=status.HTTP_200_OK)
+@router.put("/edit_contact/{email_id}", response_model=TrustedContactResponse, status_code=status.HTTP_200_OK)
 def edit_contact(
-    contact_id: int,
+    email_id: int,
     data: TrustedContactUpdate,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.update_contact(db, current_user, contact_id, data)
+    return trusted_contact.update_contact(db, current_user, email_id, data)
 
 
-@router.delete("/remove_contact/{contact_id}",status_code=status.HTTP_204_NO_CONTENT)
-def remove_contact(
-    contact_id: int,
+@router.delete("/remove_contact/{email_id}",status_code=status.HTTP_204_NO_CONTENT)
+def remove_email(
+    email_id: int,
     db: Session = Depends(get_db),
     current_user: UserModel = Depends(is_authenticated)
 ):
-    return trusted_contact.delete_contact(db, current_user, contact_id)
+    return trusted_contact.delete_contact(db, current_user, email_id)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from fastapi import HTTPException,status
 import logging
-from datetime import datetime, timezone, UTC
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from src.utils.settings import setting
 from twilio.rest import Client

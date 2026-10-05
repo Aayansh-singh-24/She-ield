@@ -25,7 +25,7 @@ class Setting(BaseSettings):
 
     # production
     FASTAPI_ENV: str 
-    SENTRY_DSN: HttpUrl | None = None
+    SENTRY_DSN: Optional[HttpUrl ]=None
 
 
 setting = Setting(**{})
