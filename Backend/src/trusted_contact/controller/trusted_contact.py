@@ -39,6 +39,7 @@ def add_contact(db: Session, current_user: UserModel, data: TrustedContactCreate
         userId=current_user.id,
         name=data.name,
         phoneNo=data.phone_number,
+        email=data.email,
         isSOS=data.is_sos_contact
     )
 
@@ -99,6 +100,9 @@ def update_contact(db: Session, current_user: UserModel, contact_id: int, data: 
 
     if data.is_sos_contact is not None:
         contact.isSOS = data.is_sos_contact # type: ignore
+
+    if data.email is not None:
+        contact.email = data.email # type: ignore
 
     db.commit()
     db.refresh(contact)
