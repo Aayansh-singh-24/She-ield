@@ -11,6 +11,7 @@ class TrustedContactsModel(Base):
     name = Column(String, nullable=False)
     country_code = Column(String, default="+91")
     phoneNo = Column(String, index=True , nullable=False)
+    email = Column(String, nullable=True)
     isSOS = Column(Boolean, default=False)
 
     owner = relationship("UserModel", back_populates="trusted_contacts")
