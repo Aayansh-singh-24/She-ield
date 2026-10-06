@@ -13,7 +13,7 @@ def add_contact(db: Session, current_user: UserModel, data: TrustedContactCreate
 
     existing_contact = db.query(TrustedContactsModel).filter(
         TrustedContactsModel.userId == current_user.id,
-        TrustedContactsModel.emaiL == data.email
+        TrustedContactsModel.email == data.email
     ).first()
     
     if existing_contact:
