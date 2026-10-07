@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.trusted_contact.models.model import TrustedContactsModel
-from Backend.src.exception import custom_exception
+from src.exception import custom_exception
 from src.trusted_contact.schema.dtos import TrustedContactCreateSchema, TrustedContactUpdate
 from src.user.models import UserModel
 

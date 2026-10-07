@@ -1,5 +1,5 @@
 import httpx
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -12,6 +12,7 @@ from src.user.models import UserModel
 from src.trusted_contact.routes import contact_route
 from src.location.routes import location_route
 from src.user import user_route
+from src.user.controller import is_authenticated
 from src.audio import audio_routes
 from src.profile import profile_routes
 from src.utils.settings import setting
@@ -53,12 +54,12 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception,global_exception_handler)
 
 @app.post("/detect-distress")
-async def detect_distress(file: UploadFile = File(...)):
+async def detect_distress(file: UploadFile = File(...), current_user:UserModel = Depends(is_authenticated)):
     async with httpx.AsyncClient(timeout=30.0) as client:
         try:
             content = await file.read()
             files = {'file': (file.filename, content, file.content_type)}
-            response = await client.post("http://127.0.0.1:8001/detect-distress", files=files)
+            response = await client.post("http://ml-service:8001/detect-distress", files=files)
             if response.status_code != 200:
                 raise HTTPException(status_code=response.status_code, detail=response.text)
             return response.json()
