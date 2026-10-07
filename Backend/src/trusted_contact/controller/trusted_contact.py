@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.trusted_contact.models.model import TrustedContactsModel
+from src.exception import custom_exception
 from src.trusted_contact.schema.dtos import TrustedContactCreateSchema, TrustedContactUpdate
 from src.user.models import UserModel
 
@@ -30,10 +31,7 @@ def add_contact(db: Session, current_user: UserModel, data: TrustedContactCreate
     ).first()
     
     if existing_contact:
-        raise HTTPException(
-            status_code=400,
-            detail="Contact already exists"
-        )
+        raise custom_exception.ContactAlreadyExist()
 
     contact = TrustedContactsModel(
         userId=current_user.id,
@@ -69,10 +67,7 @@ def update_contact(db: Session, current_user: UserModel, contact_id: int, data: 
     ).first()
 
     if not contact:
-        raise HTTPException(
-            status_code=404,
-            detail="Contact not found"
-        )
+        raise custom_exception.ContactNotFoundException()
 
     if data.name is not None:
         contact.name = data.name # type: ignore
@@ -83,17 +78,14 @@ def update_contact(db: Session, current_user: UserModel, contact_id: int, data: 
     if data.phone_number is not None:
         validate_phone_number(data.phone_number)
 
-        existing_contact = db.query(TrustedContactsModel).filter(
+        existing_phone_number = db.query(TrustedContactsModel).filter(
             TrustedContactsModel.userId == current_user.id,
             TrustedContactsModel.phoneNo == data.phone_number,
             TrustedContactsModel.id != contact_id
         ).first()
 
-        if existing_contact:
-            raise HTTPException(
-                status_code=400,
-                detail="Contact number already exists"
-            )
+        if existing_phone_number:
+            raise custom_exception.ContactNumberAlreadyExist()
 
         contact.phoneNo = data.phone_number # type: ignore
 
@@ -113,10 +105,7 @@ def delete_contact(db: Session, current_user: UserModel, contact_id: int):
     ).first()
 
     if not contact:
-        raise HTTPException(
-            status_code=404,
-            detail="Contact not found"
-        )
+        raise custom_exception.ContactNotFoundException()
 
     db.delete(contact)
     db.commit()
