@@ -21,7 +21,6 @@ Base.metadata.create_all(bind=engine)
 
 # from sqlalchemy import inspect
 
-
 if setting.SENTRY_DSN and setting.FASTAPI_ENV == "PRODUCTION":
     sentry_sdk.init(dsn=setting.SENTRY_DSN, enable_tracing=True)
 
