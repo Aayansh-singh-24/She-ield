@@ -21,11 +21,11 @@ jobs:
             
             - name: build backend image
               run: |
-                    docker build -t sheield-backend:test ./ Backend
+                    docker build -t sheield-backend:test ./Backend
             
             - name: build ML images
               run: |
-                    docker build -t sheield-ml:test ./ ML-Services
+                    docker build -t sheield-ml:test ./ML-Services
 
     deploy:
         name: Deploy to EC2
@@ -48,19 +48,19 @@ jobs:
                     git pull origin main
 
                     echo "Stopping old containers..."
-                    docker compose down
+                    docker compose --env-file .env down
 
                     echo "Building latest images..."
-                    docker compose build --no-cache
+                    docker compose --env-file .env build --no-cache
 
                     echo "Starting application..."
-                    docker compose up -d
+                    docker compose --env-file .env up -d
 
                     echo "Removing unused Docker images..."
                     docker image prune -f
 
                     echo "Checking containers..."
-                    docker compose ps
+                    docker compose --env-file .env ps
 
                     echo "Deployment completed."
 

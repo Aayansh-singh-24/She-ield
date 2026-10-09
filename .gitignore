@@ -9,7 +9,6 @@ __pycache__/
 
 .env
 .env.*
-docker-compose.env
 
 .vscode/
 

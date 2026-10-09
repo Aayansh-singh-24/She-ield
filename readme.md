@@ -134,7 +134,7 @@ The backend API will be available at `http://127.0.0.1:8000`.
 
 For a complete setup including the database and ML service, you can use Docker Compose.
 
-1.  Create a `docker-compose.env` file in the root directory for PostgreSQL credentials.
+1.  Create a `.env` file in the root directory for PostgreSQL credentials and port mappings (`BACKEND_HOST_PORT`, `BACKEND_CONTAINER_PORT`, `ML_SERVICE_HOST_PORT`, `ML_SERVICE_CONTAINER_PORT`, `POSTGRES_HOST_PORT`, and `POSTGRES_CONTAINER_PORT`).
 2.  Ensure your `Backend/.env` file is correctly configured.
 3.  Run the following command from the root directory:
 
