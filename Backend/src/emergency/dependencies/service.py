@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from src.utils.settings import setting
-from twilio.rest import Client
+# from twilio.rest import Client
 from src.user.models import UserModel
 from src.trusted_contact.models.model import TrustedContactsModel
 from src.emergency.model import EmergencySession, LocationHistory
@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 class EmergencyService:
     def __init__(self, db:Session):
         self.db = db
-        self.client = Client(setting.TWILIO_ACCOUNT_SID, setting.TWILIO_AUTH_TOKEN)
-        self.phoneNo = setting.TWILIO_PHONE_NUMBER
+        # self.client = Client(setting.TWILIO_ACCOUNT_SID, setting.TWILIO_AUTH_TOKEN)
+        # self.phoneNo = setting.TWILIO_PHONE_NUMBER
         self.base_tracking_url = getattr(setting, "TRACKING_URL",  "https://sheield.netlify.app")
 
 
     def _get_contact_(self,current_user:UserModel):
-        contact = self.db.query(TrustedContactsModel).filter(TrustedContactsModel.userId == current_user.id).all()
+        contact = self.db.query(TrustedContactsModel).filter(TrustedContactsModel.userId == current_user.id,TrustedContactsModel.isSOS==True).all()
 
         if not contact:
             raise HTTPException (status_code=status.HTTP_404_NOT_FOUND, detail="contact not found")
@@ -33,14 +33,14 @@ class EmergencyService:
         return f"{self.base_tracking_url}/?session_id={session_id}"
     
 
-    def _format_phone_number_(self, contact: TrustedContactsModel):
+    # def _format_phone_number_(self, contact: TrustedContactsModel):
 
-        country = contact.country_code or "+91"
+    #     country = contact.country_code or "+91"
 
-        if not country.startswith("+"):
-            country = "+" + country
+    #     if not country.startswith("+"):
+    #         country = "+" + country
 
-        return f"{country}{contact.phoneNo}"
+    #     return f"{country}{contact.phoneNo}"
     
 
 
@@ -180,7 +180,7 @@ class EmergencyService:
 
         session = self.validate_user_owner(session_id,current_user)
         session.status = "ENDED"
-        session.ended_time = datetime.now(UTC)
+        session.ended_time = datetime.now(timezone.utc)
 
         self.db.commit()
 
