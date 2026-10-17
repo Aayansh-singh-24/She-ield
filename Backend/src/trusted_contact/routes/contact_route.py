@@ -18,7 +18,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create_contact", status_code=status.HTTP_201_CREATED)
+@router.post("/create_contact", response_model=TrustedContactResponse, status_code=status.HTTP_201_CREATED)
 def create_contact(
     data: TrustedContactCreateSchema,
     db: Session = Depends(get_db),

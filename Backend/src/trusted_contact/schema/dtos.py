@@ -9,8 +9,8 @@ class TrustedContactCreateSchema(BaseModel):
 
 
 class TrustedContactUpdate(BaseModel):
-    name: str
-    email:EmailStr
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
     is_sos_contact: Optional[bool] = None
     
 

@@ -6,8 +6,6 @@ from src.trusted_contact.schema.dtos import TrustedContactCreateSchema, TrustedC
 from src.user.models import UserModel
 
 
-from fastapi import HTTPException
-
 
 def add_contact(db: Session, current_user: UserModel, data: TrustedContactCreateSchema):
 
@@ -64,8 +62,6 @@ def update_contact(db: Session, current_user: UserModel, email_id: int, data: Tr
     if data.name is not None:
         contact.name = data.name # type: ignore
 
-    if data.country_code is not None:
-        contact.country_code = data.country_code # type: ignore
 
     if data.email is not None:
 
