@@ -1,0 +1,17 @@
+BharatCode Build League Submission
+
+Project Name: She-ield
+
+Built using BharatCode Model API.
+
+She-ield is an AI-powered women's safety platform designed to detect distress situations and help users get emergency assistance.
+
+Features:
+- AI-powered distress detection using speech and audio analysis.
+- Emergency SOS alerts.
+- Real-time location sharing with trusted contacts.
+- Secure emergency audio recording.
+- Multilingual distress keyword detection.
+- FastAPI backend and React frontend.
+
+GitHub: https://github.com/Aayansh-singh-24/She-ield
