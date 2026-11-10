@@ -54,8 +54,7 @@ https://github.com/Aayansh-singh-24/Fronted-Safe_her
 
 ### Backend API Documentation
 
-- **Swagger UI:** [https:///docs](http://13.233.127.91:8000/docs)
-- **ReDoc:** [https://your-backend-domain/redoc](http://13.233.127.91:8000/redoc)
+- **Swagger UI:** [documentation](http://13.233.127.91:8000/docs)
 
 > **⚠️ Backend Availability**
 >
